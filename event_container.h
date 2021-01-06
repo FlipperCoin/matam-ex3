@@ -1,0 +1,7 @@
+namespace mtm {
+    
+    class EventContainer {
+
+    }
+
+}
