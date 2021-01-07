@@ -15,6 +15,8 @@ SET(SOURCES_PART_A partA/date_wrap partA/exceptions)
 SET(SOURCES_PART_B partB/base_event partB/closed_event partB/custom_event partB/event_container partB/festival partB/one_time_event partB/open_event partB/recurring_event)
 SET(SOURCES_PART_C partC/schedule)
 
+add_library(date partA/date.c partA/date.h)
+
 link_directories(partA)
 add_executable(progA partA/test_partA ${SOURCES_PART_A})
 # add_executable(progB partB/test_partB ${SOURCES_PART_A} ${SOURCES_PART_B})
@@ -28,7 +30,7 @@ target_include_directories(progA PUBLIC partA)
 
 find_package(GTest CONFIG REQUIRED)
 add_executable(testA partA/test_partA_full.cpp ${SOURCES_PART_A})
-target_link_libraries(testA libdate.a gtest gtest_main rt pthread)
+target_link_libraries(testA date gtest gtest_main rt pthread)
 target_include_directories(testA PUBLIC partA)
 add_test(testA testA)
 

@@ -1,22 +1,25 @@
 #include <ostream>
 
+extern "C" {
+    #include "date.h"
+}
+
 using std::ostream;
 
 namespace mtm {
     class DateWrap 
     {
         private:
-            int m_day=0;
-            int m_month=0;
-            int m_year=0;
+            Date m_dateADT;
+            void safeDateGet(int &day, int &month, int &year) const;
         public:
             DateWrap(int day, int month, int year);
             DateWrap(const DateWrap& dateWrap) = default;
             ~DateWrap() = default;
             DateWrap& operator=(const DateWrap& date) = default;
-            const int& day() const;
-            const int& month() const;
-            const int& year() const;
+            int day() const;
+            int month() const;
+            int year() const;
 
             DateWrap operator++(int);
             DateWrap operator+(int days) const;
