@@ -11,7 +11,7 @@ namespace mtm {
             int m_year=0;
         public:
             DateWrap(int day, int month, int year);
-            DateWrap(DateWrap& dateWrap) = default;
+            DateWrap(const DateWrap& dateWrap) = default;
             ~DateWrap() = default;
             DateWrap& operator=(const DateWrap& date) = default;
             const int& day() const;

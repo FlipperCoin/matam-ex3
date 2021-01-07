@@ -48,5 +48,17 @@ namespace mtm {
     ostream& operator<<(ostream& in, const DateWrap& dateWrap) {
 
     }
+
+    DateWrap DateWrap::operator++(int) {
+
+    }
+
+    DateWrap DateWrap::operator+(int days) const {
+
+    }
+
+    DateWrap& DateWrap::operator+=(int days) {
+
+    }
 }
 
