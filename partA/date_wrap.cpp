@@ -1,7 +1,7 @@
 #include "date_wrap.h"
 
 namespace mtm {
-    DateWrap::DateWrap(int day, int month, int year) {
+    DateWrap::DateWrap(int day, int month, int year) : m_day(day), m_month(month), m_year(year) {
     
     }   
 
