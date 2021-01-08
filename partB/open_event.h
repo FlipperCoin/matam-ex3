@@ -1,7 +1,15 @@
+#ifndef _OPEN_EVENT_H_
+#define _OPEN_EVENT_H_
+
+#include "base_event.h"
+
 namespace mtm {
     
-    class OpenEvent {
-
+    class OpenEvent : public BaseEvent {
+    public:
+        OpenEvent(const DateWrap &date, const string& event_name, const int * participants, int participants_length);
     };
 
 }
+
+#endif

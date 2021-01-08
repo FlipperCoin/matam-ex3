@@ -65,8 +65,8 @@ namespace mtm {
         return date + days;
     }
 
-    ostream& operator<<(ostream& in, const DateWrap& dateWrap) {
-
+    ostream& operator<<(ostream& out, const DateWrap& dateWrap) {
+        return out << dateWrap.day() << '/' << dateWrap.month() << '/' << dateWrap.year();
     }
 
     DateWrap DateWrap::operator++(int) {

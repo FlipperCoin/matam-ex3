@@ -1,3 +1,6 @@
+#ifndef _DATE_WRAP_H_
+#define _DATE_WRAP_H_
+
 #include <ostream>
 
 extern "C" {
@@ -31,8 +34,11 @@ namespace mtm {
             bool operator<=(const DateWrap& date) const;
             bool operator>(const DateWrap& date) const;
             bool operator>=(const DateWrap& date) const;
-            friend ostream& operator<<(ostream& in, const DateWrap& dateWrap);
+
     };
 
+    ostream& operator<<(ostream& out, const DateWrap& dateWrap);
     DateWrap operator+(int days, const DateWrap& date);
 }
+
+#endif
