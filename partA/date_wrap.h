@@ -13,13 +13,13 @@ namespace mtm {
     class DateWrap 
     {
         private:
-            Date m_dateADT;
+            Date dateAdt;
             void safeDateGet(int &day, int &month, int &year) const;
         public:
             DateWrap(int day, int month, int year);
-            DateWrap(const DateWrap& dateWrap) = default;
-            ~DateWrap() = default;
-            DateWrap& operator=(const DateWrap& date) = default;
+            DateWrap(const DateWrap& dateWrap);
+            ~DateWrap();
+            DateWrap& operator=(const DateWrap& date);
             int day() const;
             int month() const;
             int year() const;
