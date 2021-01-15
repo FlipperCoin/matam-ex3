@@ -10,7 +10,7 @@ namespace mtm {
 
     BaseEvent::BaseEvent(const DateWrap &date, const string& event_name, const int *participants,
                          int participants_length) :
-            date(date), event_name(event_name), participants_max(participants_length), participants_length(participants_length)
+            date(date), event_name(event_name), participants_length(participants_length), participants_max(participants_length)
     {
         if (participants == nullptr) {
             throw Exception(); // TODO
@@ -67,6 +67,8 @@ namespace mtm {
         for (int i = 0; i < participants_length; ++i) {
             stream << participants[i] << std::endl;
         }
+
+        return stream;
     }
 
     BaseEvent BaseEvent::clone() const {
@@ -87,6 +89,8 @@ namespace mtm {
         participants = temp;
         participants_length = event.participants_length;
         participants_max = event.participants_max;
+
+        return *this;
     }
 
     bool BaseEvent::isStudentNumberValid(int student) {

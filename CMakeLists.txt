@@ -38,6 +38,13 @@ target_include_directories(testB PUBLIC partA)
 target_include_directories(testB PUBLIC partB)
 add_test(testB testB)
 
+add_executable(testC partC/test_partC_full.cpp ${SOURCES_PART_A} ${SOURCES_PART_B} ${SOURCES_PART_C})
+target_link_libraries(testC date gtest gtest_main rt pthread)
+target_include_directories(testC PUBLIC partA)
+target_include_directories(testC PUBLIC partB)
+target_include_directories(testC PUBLIC partC)
+add_test(testC testC)
+
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
 include(CPack)
