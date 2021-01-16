@@ -1,4 +1,6 @@
 #include <exception>
+#ifndef _EXCEPTIONS_
+#define _EXCEPTIONS_
 
 using std::exception;
 
@@ -18,3 +20,5 @@ namespace mtm {
     class EventDoesNotExist : public Exception {};
     class RegistrationBlocked : public Exception {};
 }
+
+#endif

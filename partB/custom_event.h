@@ -13,7 +13,7 @@ namespace mtm {
 
     public:
         CustomEvent(const DateWrap& date, const string& event_name, CanRegister can_register):
-                BaseEvent(date, event_name), can_register(can_register()){
+                BaseEvent(date, event_name), can_register(can_register){
         };
 
         CustomEvent(const CustomEvent &event) : BaseEvent(event), can_register(event.can_register){
