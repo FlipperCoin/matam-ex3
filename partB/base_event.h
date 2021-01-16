@@ -42,6 +42,7 @@ namespace mtm {
         void resizeListParticipants();
         void sortStudents();
         BaseEvent& operator=(const BaseEvent &event);
+        bool operator<(const BaseEvent &event);
     };
 
 }

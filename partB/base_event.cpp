@@ -95,4 +95,16 @@ namespace mtm {
             participants[min] = temp;
         }
     }
+
+    bool BaseEvent::operator<(const BaseEvent& event) {
+        if (date > event.date) {
+            return false;
+        }
+
+        if (date < event.date) {
+            return true;
+        }
+
+        return event_name < event.event_name;
+    }
 }
