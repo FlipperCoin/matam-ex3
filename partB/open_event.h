@@ -4,12 +4,16 @@
 #include "base_event.h"
 
 namespace mtm {
-    
     class OpenEvent : public BaseEvent {
-    public:
-        OpenEvent(const DateWrap &date, const string& event_name, const int * participants, int participants_length);
-    };
 
+    public:
+        OpenEvent(const DateWrap &date, const string& event_name)
+                : BaseEvent(date,event_name) {
+        };
+        OpenEvent* clone() const override{
+            return (new OpenEvent(*this));
+        };
+    };
 }
 
 #endif

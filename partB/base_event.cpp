@@ -3,49 +3,20 @@
 
 namespace mtm {
 
-    BaseEvent::BaseEvent(const BaseEvent &event) :
-            BaseEvent(event.date, event.event_name, event.participants, event.participants_max) {
-
-    }
-
-    BaseEvent::BaseEvent(const DateWrap &date, const string& event_name, const int *participants,
-                         int participants_length) :
-            date(date), event_name(event_name), participants_max(participants_length), participants_length(participants_length)
-    {
-        if (participants == nullptr) {
-            throw Exception(); // TODO
-        }
-
-        this->participants = new int[participants_length];
-
-        for (int i = 0; i < participants_length; i++) {
-            if (!isStudentNumberValid(participants[i])) {
-                throw InvalidStudent();
-            }
-
-            this->participants[i] = participants[i];
-        }
-        this->sortStudents();
-    }
-
     void BaseEvent::registerParticipant(int student) {
+        if (!isStudentNumberValid(student)) {
+            throw InvalidStudent();
+        }
+
         if (findStudent(student) != -1) {
             throw AlreadyRegistered();
         }
 
-        if (participants_length == participants_max) {
-            int *temp = new int[participants_max + PARTICIPANTS_RESIZE];
-            participants_max += PARTICIPANTS_RESIZE;
-
-            for (int i = 0; i < participants_length; i++) {
-                temp[i] = participants[i];
-            }
-
-            delete[] participants;
-            participants = temp;
+        if (participants_num == participants_max) {
+            this->resizeListParticipants();
         }
 
-        participants[participants_length++] = student;
+        participants[participants_num++] = student;
         this->sortStudents();
     }
 
@@ -54,8 +25,9 @@ namespace mtm {
         if (index == -1) {
             throw NotRegistered();
         }
-        participants[index] = participants[--participants_length];
+        participants[index] = participants[--participants_num];
         this->sortStudents();
+
     }
 
     std::ostream &BaseEvent::printShort(std::ostream &stream) const {
@@ -64,13 +36,9 @@ namespace mtm {
 
     std::ostream &BaseEvent::printLong(std::ostream &stream) const {
         printShort(stream);
-        for (int i = 0; i < participants_length; ++i) {
+        for (int i = 0; i < participants_num; ++i) {
             stream << participants[i] << std::endl;
         }
-    }
-
-    BaseEvent BaseEvent::clone() const {
-        return *this;
     }
 
     BaseEvent::~BaseEvent() {
@@ -79,13 +47,13 @@ namespace mtm {
 
     BaseEvent &BaseEvent::operator=(const BaseEvent &event) {
         int *temp = new int[event.participants_max];
-        for (int i = 0; i < event.participants_length; ++i) {
+        for (int i = 0; i < event.participants_num; ++i) {
             temp[i] = event.participants[i];
         }
 
         delete[] participants;
         participants = temp;
-        participants_length = event.participants_length;
+        participants_num = event.participants_num;
         participants_max = event.participants_max;
     }
 
@@ -93,8 +61,18 @@ namespace mtm {
         return !(student < MINIMUM_STUDENT_NUMBER || student > MAXIMUM_STUDENT_NUMBER);
     }
 
+    void BaseEvent::resizeListParticipants(){
+        int *temp = new int[participants_max + LIST_RESIZE];
+        participants_max += LIST_RESIZE;
+        for (int i = 0; i < participants_num; i++) {
+            temp[i] = participants[i];
+        }
+        delete[] participants;
+        participants = temp;
+    }
+
     int BaseEvent::findStudent(int student) {
-        for (int i = 0; i < participants_length; i++) {
+        for (int i = 0; i < participants_num; i++) {
             if (participants[i] == student) {
                 return i;
             }
@@ -105,9 +83,9 @@ namespace mtm {
     // TODO check this
     void BaseEvent::sortStudents() {
         int i, j, min, temp;
-        for (i = 0; i < participants_length - 1; i++) {
+        for (i = 0; i < participants_num - 1; i++) {
             min = i;
-            for (j = i + 1; j < participants_length; j++) {
+            for (j = i + 1; j < participants_num; j++) {
                 if (participants[j] < participants[min]) {
                     min = j;
                 }
