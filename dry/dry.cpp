@@ -28,8 +28,8 @@ namespace dry {
         }
 
         std::vector<T> slicedVector;
-        for (auto iter = (vec.begin() + start); iter < (vec.begin() + stop); iter += step) {
-            slicedVector.push_back(*iter);
+        for (auto iterator = (vec.begin() + start); iterator < (vec.begin() + stop); iterator += step) {
+            slicedVector.push_back(*iterator);
         }
 
         return slicedVector;
@@ -42,8 +42,8 @@ namespace dry {
             return true;
         }
 
-        auto long_start = static_cast<size_t>(start);
-        auto long_stop = static_cast<size_t>(stop);
+        size_t long_start = start;
+        size_t long_stop = stop;
         if (long_start >= vec_size) {
             return true;
         }
