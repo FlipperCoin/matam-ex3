@@ -10,13 +10,7 @@ namespace mtm {
         if (!checkInvite(student)){
             throw RegistrationBlocked();
         }
-
-        if (participants_num == participants_max) {
-            this->resizeListParticipants();
-        }
-
-        participants[participants_num++] = student;
-        this->sortStudents();
+        participants.add(student);
     }
 
     bool ClosedEvent::checkInvite(int student){
@@ -40,9 +34,7 @@ namespace mtm {
         if (invitees_max == invitees_num) {
             this->resizeListInvitees();
         }
-
         invitees[invitees_num++] = student;
-
     }
 
     void ClosedEvent::resizeListInvitees(){

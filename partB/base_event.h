@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include "date_wrap.h"
+#include "vector.h"
 
 using std::string;
 
@@ -15,35 +16,25 @@ namespace mtm {
     protected:
         DateWrap date;
         string event_name;
-        int *participants;
-        int participants_num;
-        int participants_max;
+        Vector<int> participants;
+        //int *participants;
+        //int participants_num;
+        //int participants_max;
     public:
         BaseEvent(const DateWrap &date, const string& event_name) :
-                date(date), event_name(event_name), participants(new int[LIST_RESIZE]), participants_num(0), participants_max(LIST_RESIZE)
-                { }
+                date(date), event_name(event_name), participants(Vector<int>(0)) { }
 
-        BaseEvent(const BaseEvent &event):
-            date(event.date), event_name(event.event_name), participants(new int[event.participants_num + event.participants_max]), participants_num(event.participants_num), participants_max(event.participants_max) {
-            for (int i = 0; i < event.participants_num; i++) {
-                this->participants[i] = event.participants[i];
-            }
-        }
 
         virtual void registerParticipant(int student);
         virtual void unregisterParticipant(int student);
-        virtual ostream& printShort(ostream &stream) const;
+        virtual std::ostream& printShort(ostream& stream) const;
         virtual std::ostream& printLong(std::ostream& stream) const;
         virtual BaseEvent* clone() const = 0;
-        virtual ~BaseEvent();
         bool isStudentNumberValid(int student);
-        int findStudent(int student);
-        void resizeListParticipants();
         DateWrap getDate() const;
-        void sortStudents();
         const DateWrap& getDate();
         const string& getName();
-        BaseEvent& operator=(const BaseEvent &event);
+        BaseEvent& operator=(const BaseEvent &event) = delete;
         bool operator<(const BaseEvent &event);
         bool operator==(const BaseEvent &event) const;
     };
