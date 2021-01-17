@@ -7,7 +7,7 @@ namespace mtm {
     class OneTimeEvent : public EventContainer {
     public:
         OneTimeEvent(const DateWrap date, const string& event_name) {
-            events.add(EventType(date,event_name));
+            events.add(SharedPointer<BaseEvent>(new EventType(date,event_name)));
         }
         void add(const BaseEvent& event) override{
             throw NotSupported();
