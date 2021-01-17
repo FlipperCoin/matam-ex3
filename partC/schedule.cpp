@@ -5,12 +5,13 @@
 
 // TODO: check if lambda is allowed
 // TODO: make sure self-assignment is checked everywhere & tested
+// TODO: valid student 1234567890
 namespace mtm {
 
     void Schedule::addEvents(const EventContainer& container) {
         auto events_copy = events;
         for(const BaseEvent& event : container) {
-            auto found = findEvent(event);
+            auto found = findEvent(events_copy, event);
 
             if (found != events.end()) {
                 throw EventAlreadyExists();
@@ -40,7 +41,7 @@ namespace mtm {
     }
 
     void Schedule::printMonthEvents(int month, int year) {
-        if (month < 1 || month > 12 || year < 1) {
+        if (month < 1 || month > 12) {
             throw Exception(); // TODO
         }
 
@@ -58,27 +59,29 @@ namespace mtm {
 
     template<class Predicate>
     void Schedule::printSomeEvents(Predicate predicate, bool verbose) {
-        // TODO
+        std::vector<std::shared_ptr<BaseEvent>> some_events;
+        std::copy_if(events.begin(), events.end(), std::back_inserter(some_events), predicate);
+
+        printEvents(some_events);
     }
 
     void Schedule::printEventDetails(const DateWrap &event_date, const std::string &event_name) {
         auto event = findEvent(event_date, event_name);
 
-        safeGetEvent(event)->printLong(std::cout);
-        std::cout << std::endl;
+        safeGetEvent(event)->printLong(*output);
+        *output << std::endl;
     }
 
-    std::vector<std::shared_ptr<BaseEvent>>::iterator Schedule::findEvent(const BaseEvent &event) {
-        auto found = std::find_if(events.begin(),
-                                  events.end(),
+    std::vector<std::shared_ptr<BaseEvent>>::const_iterator
+    Schedule::findEvent(const std::vector<std::shared_ptr<BaseEvent>>& events_container, const BaseEvent &event) {
+        return std::find_if(events_container.begin(),
+                                  events_container.end(),
                                   [&event](const std::shared_ptr<BaseEvent>& other_event) {
                                         return *other_event == event;
                                     });
-
-        return found;
     }
 
-    std::vector<std::shared_ptr<BaseEvent>>::iterator
+    std::vector<std::shared_ptr<BaseEvent>>::const_iterator
     Schedule::findEvent(const DateWrap &event_date, const string &event_name) {
         return std::find_if(events.begin(),
                      events.end(),
@@ -96,15 +99,19 @@ namespace mtm {
                     });
     }
 
-    void Schedule::printEvents(const std::vector<std::shared_ptr<BaseEvent>> &events_to_print) {
+    void Schedule::printEvents(const std::vector<std::shared_ptr<BaseEvent>> &events_to_print, bool verbose) {
         for (const auto& event : events_to_print) {
-            event->printShort(std::cout);
-            std::cout << std::endl;
+            if (verbose) {
+                event->printLong(*output);
+            } else {
+                event->printShort(*output);
+            }
+            *output << std::endl;
         }
     }
 
     std::shared_ptr<BaseEvent>
-    Schedule::safeGetEvent(const std::vector<std::shared_ptr<BaseEvent>>::iterator &iterator) {
+    Schedule::safeGetEvent(const std::vector<std::shared_ptr<BaseEvent>>::const_iterator &iterator) {
         if (iterator == events.end()) {
             throw EventDoesNotExist();
         }

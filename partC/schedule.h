@@ -10,14 +10,18 @@ namespace mtm {
 
     class Schedule {
     private:
+        std::ostream* output;
         std::vector<std::shared_ptr<BaseEvent>> events;
         void sortEvents();
-        void printEvents(const std::vector<std::shared_ptr<BaseEvent>>& events_to_print);
-        std::vector<std::shared_ptr<BaseEvent>>::iterator findEvent(const BaseEvent& event);
-        std::vector<std::shared_ptr<BaseEvent>>::iterator findEvent(const DateWrap &event_date, const std::string &event_name);
-        std::shared_ptr<BaseEvent> safeGetEvent(const std::vector<std::shared_ptr<BaseEvent>>::iterator& iterator);
+        void printEvents(const std::vector<std::shared_ptr<BaseEvent>>& events_to_print, bool verbose = false);
+        std::vector<std::shared_ptr<BaseEvent>>::const_iterator
+        findEvent(const DateWrap &event_date, const std::string &event_name);
+        static std::vector<std::shared_ptr<BaseEvent>>::const_iterator
+        findEvent(const std::vector<std::shared_ptr<BaseEvent>>& events_container, const BaseEvent &event);
+        std::shared_ptr<BaseEvent> safeGetEvent(const std::vector<std::shared_ptr<BaseEvent>>::const_iterator& iterator);
     public:
-        Schedule() = default;
+        Schedule() : Schedule(&std::cout) {};
+        explicit Schedule(std::ostream* output) : output(output) {};
         Schedule(const Schedule& other) = default;
         Schedule(Schedule&& other) noexcept = default;
         ~Schedule() = default;
