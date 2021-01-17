@@ -34,6 +34,7 @@ namespace mtm {
                 throw RegistrationBlocked();
             }
             participants.add(student);
+            participants.sort_int();
         }
     };
 }

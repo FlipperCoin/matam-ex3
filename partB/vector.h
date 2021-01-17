@@ -15,7 +15,7 @@ namespace mtm {
         ~Vector();
         void add(const T &item);
         void remove(const T &item);
-        void sort();
+        void sort_int();
         int find(const T &item) const;
         int getCount() const;
         T& operator[](int i) const;
@@ -63,18 +63,16 @@ namespace mtm {
         }
         data[count] = item;
         ++count;
-        sort();
     }
 
     template<typename T>
     void Vector<T>::remove(const T &item) {
         int index = find(item);
         data[index] = data[--count];
-        sort();
     }
 
     template<typename T>
-    void Vector<T>::sort() {
+    void Vector<T>::sort_int() {
         int i, j, min, temp;
         for (i = 0; i < count - 1; i++) {
             min = i;

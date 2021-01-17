@@ -13,6 +13,7 @@ namespace mtm {
         }
 
         participants.add(student);
+        participants.sort_int();
     }
 
     void BaseEvent::unregisterParticipant(int student) {
@@ -21,7 +22,7 @@ namespace mtm {
             throw NotRegistered();
         }
         participants.remove(student);
-
+        participants.sort_int();
     }
 
     std::ostream &BaseEvent::printShort(std::ostream &stream) const {

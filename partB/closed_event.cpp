@@ -14,6 +14,7 @@ namespace mtm {
             throw RegistrationBlocked();
         }
         participants.add(student);
+        participants.sort_int();
     }
 
     bool ClosedEvent::checkInvite(int student){
@@ -32,6 +33,7 @@ namespace mtm {
             throw AlreadyInvited();
         }
         invitees.add(student);
+        invitees.sort_int();
     }
 
     ClosedEvent *ClosedEvent::clone() const {

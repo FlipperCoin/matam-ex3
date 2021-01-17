@@ -20,12 +20,10 @@ namespace mtm {
     }
 
     EventContainer::EventIterator EventContainer::begin() {
-        sort();
         return EventIterator(events);
     }
 
     EventContainer::EventIterator EventContainer::end() {
-        sort();
         return EventIterator(events, events.getCount());
     }
 

@@ -6,5 +6,6 @@ namespace mtm {
         if (this->festival_date != event.getDate())
             throw DateMismatch();
         events.add(SharedPointer<BaseEvent>(event.clone()));
+        sort();
     }
 }
