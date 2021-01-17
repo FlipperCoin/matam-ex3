@@ -7,11 +7,9 @@ namespace mtm {
     class OneTimeEvent : public EventContainer {
     private:
         EventType one_time_event;
-        //ClosedEvent test1;
     public:
         OneTimeEvent(const DateWrap date, const string& event_name) :
-            one_time_event(date, event_name)
-        {
+            one_time_event(date, event_name){
         }
         void add(const BaseEvent& event) override{
             throw NotSupported();
