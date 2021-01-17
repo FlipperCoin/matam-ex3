@@ -1,4 +1,5 @@
 #include "event_container.h"
+#include "base_event.h"
 
 namespace mtm {
 

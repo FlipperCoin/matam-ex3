@@ -40,6 +40,7 @@ namespace mtm {
         bool isStudentNumberValid(int student);
         int findStudent(int student);
         void resizeListParticipants();
+        DateWrap getDate() const;
         void sortStudents();
         BaseEvent& operator=(const BaseEvent &event);
         bool operator<(const BaseEvent &event);

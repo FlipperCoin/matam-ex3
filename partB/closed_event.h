@@ -32,6 +32,8 @@ namespace mtm {
         void resizeListInvitees();
         ~ClosedEvent() override;
         void addInvitee(int student);
+
+
     };
 
 }

@@ -107,4 +107,9 @@ namespace mtm {
 
         return event_name < event.event_name;
     }
+
+     DateWrap BaseEvent::getDate() const {
+        DateWrap temp_date = this->date;
+        return temp_date;
+    }
 }

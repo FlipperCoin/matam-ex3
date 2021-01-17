@@ -6,7 +6,7 @@
 #include "exceptions.h"
 
 namespace mtm {
-    template<typename CanRegister>
+    template<class CanRegister>
     class CustomEvent : public BaseEvent{
     private:
         CanRegister can_register;

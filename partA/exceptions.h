@@ -19,6 +19,9 @@ namespace mtm {
     class EventAlreadyExists : public Exception {};
     class EventDoesNotExist : public Exception {};
     class RegistrationBlocked : public Exception {};
+    class DateMismatch : public Exception {};
+    class NotSupported : public Exception {};
+
 }
 
 #endif
