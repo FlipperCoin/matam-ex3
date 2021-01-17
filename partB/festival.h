@@ -9,7 +9,7 @@ namespace mtm {
     private:
         DateWrap festival_date;
     public:
-        explicit Festival(const DateWrap& date) : festival_date(date), EventContainer(){
+        explicit Festival(const DateWrap& date) : EventContainer(), festival_date(date) {
         };
         void add(const BaseEvent& event) override;
         void resizeListEvents();

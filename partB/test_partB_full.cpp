@@ -2,21 +2,22 @@
 #include "base_event.h"
 #include "open_event.h"
 #include <iostream>
+#include "shared_pointer.h"
 
 using namespace mtm;
 
+static void a() {
+    SharedPointer<BaseEvent> p(new OpenEvent(DateWrap(1,1,1),"lalala"));
+    std::cout << p->getName() << std::endl;
+    std::cout << (*p).getDate() << std::endl;
+    auto c = p;
+    auto d = c;
+    auto e = c;
+    auto f = p;
+}
+
 TEST(BaseEventTests, test) {
-    int students[] = {3, 4, 2};
-    //BaseEvent event(DateWrap(1,1,1), "event", students, 3);
-//    EXPECT_NO_THROW(event.printLong(std::cout));
-//    EXPECT_NO_THROW(event.registerParticipant(1));
-//    EXPECT_NO_THROW(event.printLong(std::cout));
-//    EXPECT_NO_THROW(event.unregisterParticipant(2));
-//  EXPECT_NO_THROW(event.printLong(std::cout));
-//    OpenEvent open_event(DateWrap(1,1,1), "event", students, 3);
-//    open_event.registerParticipant((5));
-//    open_event.printLong(std::cout);
-//    event.printLong(std::cout);
+    a();
 }
 
 int main(int argc, char **argv) {
