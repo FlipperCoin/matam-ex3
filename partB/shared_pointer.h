@@ -9,23 +9,33 @@ namespace mtm {
     class SharedPointer
     {
     public:
-        explicit SharedPointer(T* pointer) : m_pointer(pointer), ref_count(1) {};
+        explicit SharedPointer(T* pointer) : pointer(pointer), ref_count(new int(1)) {};
 
         ~SharedPointer() {
-            if (ref_count-- == 1) {
+            if ((*ref_count)-- == 1) {
                 delete pointer;
+                delete ref_count;
             }
         }
 
-        SharedPointer(SharedPointer& other) {
-            other.ref_count++;
+        SharedPointer(const SharedPointer& other) {
             ref_count = other.ref_count;
             pointer = other.pointer;
+
+            (*ref_count)++;
         }
-        // by-value to use copy constructor
-        SharedPointer& operator=(SharedPointer other) {
+
+        SharedPointer& operator=(const SharedPointer& other) {
+            if (other == this) {
+                return *this;
+            }
+
             ref_count = other.ref_count;
             pointer = other.pointer;
+
+            (*ref_count)++;
+
+            return *this;
         }
 
         T& operator*() {
@@ -34,10 +44,16 @@ namespace mtm {
         const T& operator*() const{
             return *pointer;
         }
+        T* operator->() {
+            return pointer;
+        }
+        const T* operator->() const {
+            return pointer;
+        }
 
     private:
         T* pointer;
-        int ref_count;
+        int* ref_count;
     };
 }
-#endif _SHAREDPOINTER_H
+#endif
