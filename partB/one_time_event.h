@@ -5,11 +5,9 @@
 namespace mtm {
     template<class EventType>
     class OneTimeEvent : public EventContainer {
-    private:
-        EventType one_time_event;
     public:
-        OneTimeEvent(const DateWrap date, const string& event_name) :
-            one_time_event(date, event_name){
+        OneTimeEvent(const DateWrap date, const string& event_name) {
+            events.add(EventType(date,event_name));
         }
         void add(const BaseEvent& event) override{
             throw NotSupported();
