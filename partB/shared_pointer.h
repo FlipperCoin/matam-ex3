@@ -11,6 +11,8 @@ namespace mtm {
     public:
         explicit SharedPointer(T* pointer) : pointer(pointer), ref_count(new int(1)) {};
 
+        SharedPointer() : pointer(nullptr), ref_count(new int(0)) {};
+
         ~SharedPointer() {
             if ((*ref_count)-- == 1) {
                 delete pointer;

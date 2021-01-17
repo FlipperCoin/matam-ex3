@@ -2,23 +2,23 @@
 #define _EVENT_CONTAINER_H_
 
 #include "base_event.h"
+#include "vector.h"
+#include "shared_pointer.h"
 
 namespace mtm {
 
     class EventContainer {
     protected:
-        BaseEvent **events;
-        int events_num;
-        int events_max;
+        Vector<SharedPointer<BaseEvent>> events;
         void sort();
     public:
         struct EventIterator {
         private:
-            BaseEvent **events;
-            int events_num;
+            Vector<SharedPointer<BaseEvent>> *events;
+            int index;
         public:
-            EventIterator(BaseEvent **events) : events(events) {}
-            EventIterator(const EventIterator& iter) : EventIterator(iter.events) {}
+            explicit EventIterator(Vector<SharedPointer<BaseEvent>>& events, int index = 0) : events(&events), index(index) {}
+            EventIterator(const EventIterator& iter) : EventIterator(*iter.events) {}
             EventIterator& operator=(const EventIterator& iter);
             BaseEvent& operator*();
             EventIterator& operator++();
@@ -27,17 +27,18 @@ namespace mtm {
         };
         struct ConstEventIterator {
         private:
-            EventIterator iterator;
+            const Vector<SharedPointer<BaseEvent>> *events;
+            int index;
         public:
-            explicit ConstEventIterator(const EventIterator& iterator) : iterator(iterator) {}
-            ConstEventIterator(const ConstEventIterator& const_iterator) : ConstEventIterator(const_iterator.iterator) {}
+            explicit ConstEventIterator(const Vector<SharedPointer<BaseEvent>>& events, int index = 0) : events(&events), index(index) {}
+            ConstEventIterator(const ConstEventIterator& const_iterator) : ConstEventIterator(*const_iterator.events,const_iterator.index) {}
             ConstEventIterator& operator=(const ConstEventIterator& iter);
             const BaseEvent& operator*();
             ConstEventIterator& operator++();
             bool operator==(const ConstEventIterator& iter);
             bool operator!=(const ConstEventIterator& iter);
         };
-        EventContainer() : events(new BaseEvent*[LIST_RESIZE]), events_num(0), events_max(LIST_RESIZE) {}
+        EventContainer() = default;
         virtual void add(const BaseEvent& event) = 0;
         EventIterator begin();
         EventIterator end();

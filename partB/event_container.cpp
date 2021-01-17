@@ -5,10 +5,10 @@ namespace mtm {
 
     void EventContainer::sort() {
         int i, j, min;
-        BaseEvent *temp;
-        for (i = 0; i < events_num - 1; i++) {
+        SharedPointer<BaseEvent> temp;
+        for (i = 0; i < events.getCount() - 1; i++) {
             min = i;
-            for (j = i + 1; j < events_num; j++) {
+            for (j = i + 1; j < events.getCount(); j++) {
                 if (*(events[j]) < *(events[min])) {
                     min = j;
                 }
@@ -26,15 +26,15 @@ namespace mtm {
 
     EventContainer::EventIterator EventContainer::end() {
         sort();
-        return EventIterator(events + events_num);
+        return EventIterator(events, events.getCount());
     }
 
     EventContainer::ConstEventIterator EventContainer::begin() const {
-        return EventContainer::ConstEventIterator(EventContainer::EventIterator(events));
+        return EventContainer::ConstEventIterator(events);
     }
 
     EventContainer::ConstEventIterator EventContainer::end() const {
-        return EventContainer::ConstEventIterator(EventContainer::EventIterator(events + events_num));
+        return EventContainer::ConstEventIterator(events, events.getCount());
     }
 
     EventContainer::EventIterator& EventContainer::EventIterator::operator=(const EventContainer::EventIterator &iter) {
@@ -43,20 +43,21 @@ namespace mtm {
         }
 
         this->events = iter.events;
+        this->index = iter.index;
         return *this;
     }
 
     BaseEvent& EventContainer::EventIterator::operator*() {
-        return **events;
+        return *((*events)[index]);
     }
 
     EventContainer::EventIterator& EventContainer::EventIterator::operator++() {
-        events++;
+        index++;
         return *this;
     }
 
     bool EventContainer::EventIterator::operator==(const EventContainer::EventIterator &iter) {
-        return events == iter.events;
+        return events == iter.events && index == iter.index;
     }
 
     bool EventContainer::EventIterator::operator!=(const EventContainer::EventIterator &iter) {
@@ -69,21 +70,22 @@ namespace mtm {
             return *this;
         }
 
-        this->iterator = iter.iterator;
+        this->events = iter.events;
+        this->index = iter.index;
         return *this;
     }
 
     const BaseEvent &EventContainer::ConstEventIterator::operator*() {
-        return *iterator;
+        return *((*events)[index]);
     }
 
     EventContainer::ConstEventIterator &EventContainer::ConstEventIterator::operator++() {
-        ++iterator;
+        this->index++;
         return *this;
     }
 
     bool EventContainer::ConstEventIterator::operator==(const EventContainer::ConstEventIterator &iter) {
-        return this->iterator == iter.iterator;
+        return this->events == iter.events && this->index == iter.index;
     }
 
     bool EventContainer::ConstEventIterator::operator!=(const EventContainer::ConstEventIterator &iter) {
