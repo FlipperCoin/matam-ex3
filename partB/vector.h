@@ -92,7 +92,7 @@ namespace mtm {
     template<typename T>
     int Vector<T>::find(const T &item) const {
         for (int i = 0; i < count; i++) {
-            if (data[i] == &item) {
+            if (data[i] == item) {
                 return i;
             }
         }

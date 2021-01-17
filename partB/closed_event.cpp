@@ -4,7 +4,10 @@
 namespace mtm {
 
     void ClosedEvent::registerParticipant(int student) {
-        if (findStudent(student) != -1) {
+        if (!isStudentNumberValid(student)) {
+            throw InvalidStudent();
+        }
+        if (participants.find(student) != -1) {
             throw AlreadyRegistered();
         }
         if (!checkInvite(student)){
@@ -14,10 +17,8 @@ namespace mtm {
     }
 
     bool ClosedEvent::checkInvite(int student){
-        for (int i = 0; i < invitees_num; i++) {
-            if (invitees[i] == student) {
-                return true;
-            }
+        if(invitees.find(student) != -1){
+            return true;
         }
         return false;
     }
@@ -30,25 +31,10 @@ namespace mtm {
         if(checkInvite(student)){
             throw AlreadyInvited();
         }
-
-        if (invitees_max == invitees_num) {
-            this->resizeListInvitees();
-        }
-        invitees[invitees_num++] = student;
+        invitees.add(student);
     }
 
-    void ClosedEvent::resizeListInvitees(){
-        int *temp = new int[invitees_max + LIST_RESIZE];
-        invitees_max += LIST_RESIZE;
-        for (int i = 0; i < invitees_num; i++) {
-            temp[i] = invitees[i];
-        }
-        delete[] invitees;
-        invitees = temp;
-    }
-
-    ClosedEvent::~ClosedEvent() {
-        delete[] participants;
-        delete[] invitees;
+    ClosedEvent *ClosedEvent::clone() const {
+        return (new ClosedEvent(*this));
     }
 }
