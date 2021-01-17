@@ -21,17 +21,28 @@ namespace mtm {
 
     EventContainer::EventIterator EventContainer::begin() {
         sort();
-        return EventIterator(events, events_num);
+        return EventIterator(events);
     }
 
     EventContainer::EventIterator EventContainer::end() {
         sort();
-        return EventIterator(events + events_num, events_num);
+        return EventIterator(events + events_num);
+    }
+
+    EventContainer::ConstEventIterator EventContainer::begin() const {
+        return EventContainer::ConstEventIterator(EventContainer::EventIterator(events));
+    }
+
+    EventContainer::ConstEventIterator EventContainer::end() const {
+        return EventContainer::ConstEventIterator(EventContainer::EventIterator(events + events_num));
     }
 
     EventContainer::EventIterator& EventContainer::EventIterator::operator=(const EventContainer::EventIterator &iter) {
+        if (&iter == this) {
+            return *this;
+        }
+
         this->events = iter.events;
-        this->events_num = iter.events_num;
         return *this;
     }
 
@@ -49,6 +60,33 @@ namespace mtm {
     }
 
     bool EventContainer::EventIterator::operator!=(const EventContainer::EventIterator &iter) {
+        return !(*this == iter);
+    }
+
+    EventContainer::ConstEventIterator &
+    EventContainer::ConstEventIterator::operator=(const EventContainer::ConstEventIterator &iter) {
+        if (&iter == this) {
+            return *this;
+        }
+
+        this->iterator = iter.iterator;
+        return *this;
+    }
+
+    const BaseEvent &EventContainer::ConstEventIterator::operator*() {
+        return *iterator;
+    }
+
+    EventContainer::ConstEventIterator &EventContainer::ConstEventIterator::operator++() {
+        ++iterator;
+        return *this;
+    }
+
+    bool EventContainer::ConstEventIterator::operator==(const EventContainer::ConstEventIterator &iter) {
+        return this->iterator == iter.iterator;
+    }
+
+    bool EventContainer::ConstEventIterator::operator!=(const EventContainer::ConstEventIterator &iter) {
         return !(*this == iter);
     }
 }

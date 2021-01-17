@@ -39,6 +39,8 @@ namespace mtm {
         for (int i = 0; i < participants_num; ++i) {
             stream << participants[i] << std::endl;
         }
+
+        return stream;
     }
 
     BaseEvent::~BaseEvent() {
@@ -46,6 +48,10 @@ namespace mtm {
     }
 
     BaseEvent &BaseEvent::operator=(const BaseEvent &event) {
+        if (this == &event) {
+            return *this;
+        }
+
         int *temp = new int[event.participants_max];
         for (int i = 0; i < event.participants_num; ++i) {
             temp[i] = event.participants[i];
@@ -55,6 +61,8 @@ namespace mtm {
         participants = temp;
         participants_num = event.participants_num;
         participants_max = event.participants_max;
+
+        return *this;
     }
 
     bool BaseEvent::isStudentNumberValid(int student) {
@@ -111,5 +119,17 @@ namespace mtm {
      DateWrap BaseEvent::getDate() const {
         DateWrap temp_date = this->date;
         return temp_date;
+    }
+
+    bool BaseEvent::operator==(const BaseEvent &event) const {
+        return (date == event.date && event_name == event.event_name);
+    }
+
+    const DateWrap &BaseEvent::getDate() {
+        return date;
+    }
+
+    const string &BaseEvent::getName() {
+        return event_name;
     }
 }

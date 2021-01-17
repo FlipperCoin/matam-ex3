@@ -20,12 +20,11 @@ namespace mtm {
         int participants_max;
     public:
         BaseEvent(const DateWrap &date, const string& event_name) :
-                date(date), event_name(event_name), participants_num(0), participants_max(LIST_RESIZE), participants(new int[LIST_RESIZE]){
-        };
+                date(date), event_name(event_name), participants(new int[LIST_RESIZE]), participants_num(0), participants_max(LIST_RESIZE)
+                { }
 
         BaseEvent(const BaseEvent &event):
-            date(event.date), event_name(event.event_name), participants_num(event.participants_num), participants_max(event.participants_max),
-            participants(new int[event.participants_num + event.participants_max]){
+            date(event.date), event_name(event.event_name), participants(new int[event.participants_num + event.participants_max]), participants_num(event.participants_num), participants_max(event.participants_max) {
             for (int i = 0; i < event.participants_num; i++) {
                 this->participants[i] = event.participants[i];
             }
@@ -42,8 +41,11 @@ namespace mtm {
         void resizeListParticipants();
         DateWrap getDate() const;
         void sortStudents();
+        const DateWrap& getDate();
+        const string& getName();
         BaseEvent& operator=(const BaseEvent &event);
         bool operator<(const BaseEvent &event);
+        bool operator==(const BaseEvent &event) const;
     };
 
 }

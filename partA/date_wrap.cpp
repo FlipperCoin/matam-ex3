@@ -12,18 +12,18 @@ namespace mtm {
         return !(day < 1 || day > 30 || month < 1 || month > 12);
     }
 
-    DateWrap::DateWrap(int day, int month, int year) : dateAdt(dateCreate(day, month, year)) {
+    DateWrap::DateWrap(int day, int month, int year) : date_adt(dateCreate(day, month, year)) {
         if (!isDateValid(day, month)) {
             throw InvalidDate();
         }
 
-        if (nullptr == dateAdt) {
+        if (nullptr == date_adt) {
             throw Exception(); // TODO
         }
     }
 
     void DateWrap::safeDateGet(int &day, int &month, int &year) const {
-        if (!dateGet(dateAdt, &day, &month, &year)) {
+        if (!dateGet(date_adt, &day, &month, &year)) {
             throw Exception(); // TODO
         }
     }
@@ -59,11 +59,11 @@ namespace mtm {
     }
 
     bool DateWrap::operator<(const DateWrap& date) const {
-        return (dateCompare(dateAdt, date.dateAdt) < 0);
+        return (dateCompare(date_adt, date.date_adt) < 0);
     }
 
     bool DateWrap::operator==(const DateWrap& date) const {
-        return (dateCompare(dateAdt, date.dateAdt) == 0);
+        return (dateCompare(date_adt, date.date_adt) == 0);
     }
 
     bool DateWrap::operator!=(const DateWrap& date) const {
@@ -74,13 +74,13 @@ namespace mtm {
         return date + days;
     }
 
-    ostream& operator<<(ostream& out, const DateWrap& dateWrap) {
-        return out << dateWrap.day() << '/' << dateWrap.month() << '/' << dateWrap.year();
+    ostream& operator<<(ostream& out, const DateWrap& date_wrap) {
+        return out << date_wrap.day() << '/' << date_wrap.month() << '/' << date_wrap.year();
     }
 
     DateWrap DateWrap::operator++(int) {
         DateWrap dateCopy = *this;
-        dateTick(dateAdt);
+        dateTick(date_adt);
         return dateCopy;
     }
 
@@ -91,7 +91,7 @@ namespace mtm {
 
         DateWrap dateCopy = *this;
         for (int i = 0; i < days; ++i) {
-            dateTick(dateCopy.dateAdt);
+            dateTick(dateCopy.date_adt);
         }
 
         return dateCopy;
@@ -104,24 +104,28 @@ namespace mtm {
         return *this;
     }
 
-    DateWrap::DateWrap(const DateWrap &dateWrap) : DateWrap(dateWrap.day(), dateWrap.month(), dateWrap.year()) {
+    DateWrap::DateWrap(const DateWrap &date_wrap) : DateWrap(date_wrap.day(), date_wrap.month(), date_wrap.year()) {
 
     }
 
     DateWrap& DateWrap::operator=(const DateWrap &date) {
-        Date dateAdtCopy = dateCopy(date.dateAdt);
+        if (this == &date) {
+            return *this;
+        }
+
+        Date dateAdtCopy = dateCopy(date.date_adt);
         if (dateAdtCopy == nullptr) {
             throw Exception(); // TODO
         }
 
-        dateDestroy(dateAdt);
-        dateAdt = dateAdtCopy;
+        dateDestroy(date_adt);
+        date_adt = dateAdtCopy;
 
         return *this;
     }
 
     DateWrap::~DateWrap() {
-        dateDestroy(dateAdt);
+        dateDestroy(date_adt);
     }
 }
 

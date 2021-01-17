@@ -13,11 +13,11 @@ namespace mtm {
     class DateWrap 
     {
         private:
-            Date dateAdt;
+            Date date_adt;
             void safeDateGet(int &day, int &month, int &year) const;
         public:
             DateWrap(int day, int month, int year);
-            DateWrap(const DateWrap& dateWrap);
+            DateWrap(const DateWrap& date_wrap);
             ~DateWrap();
             DateWrap& operator=(const DateWrap& date);
             int day() const;
@@ -37,7 +37,7 @@ namespace mtm {
 
     };
 
-    ostream& operator<<(ostream& out, const DateWrap& dateWrap);
+    ostream& operator<<(ostream& out, const DateWrap& date_wrap);
     DateWrap operator+(int days, const DateWrap& date);
 }
 

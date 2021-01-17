@@ -22,7 +22,7 @@ void test3(const mtm::Schedule& schedule) {
     schedule.printEventDetails(mtm::DateWrap(5, 1, 2021), "Update Q&A");
 }
 
-void test4(const mtm::Schedule& schedule) { schedule.printMonthEvents(12); }
+void test4(const mtm::Schedule& schedule) { schedule.printMonthEvents(12, 2020); }
 
 class MutatingPredicate {
     int counter = 0;
