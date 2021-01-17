@@ -22,9 +22,9 @@ namespace mtm {
         //int participants_max;
     public:
         BaseEvent(const DateWrap &date, const string& event_name) :
-                date(date), event_name(event_name), participants(Vector<int>(0)) { }
+                date(date), event_name(event_name), participants(Vector<int>(10)) { }
 
-
+        BaseEvent(const BaseEvent& event) = default;
         virtual void registerParticipant(int student);
         virtual void unregisterParticipant(int student);
         virtual std::ostream& printShort(ostream& stream) const;
