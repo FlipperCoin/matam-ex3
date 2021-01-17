@@ -14,8 +14,14 @@ namespace mtm {
         SharedPointer() : pointer(nullptr), ref_count(new int(0)) {};
 
         ~SharedPointer() {
-            if ((*ref_count)-- == 1) {
-                delete pointer;
+            dispose();
+        }
+
+        void dispose() {
+            if ((*ref_count)-- <= 1) {
+                if (pointer != nullptr) {
+                    delete pointer;
+                }
                 delete ref_count;
             }
         }
@@ -31,6 +37,8 @@ namespace mtm {
             if (&other == this) {
                 return *this;
             }
+
+            dispose();
 
             ref_count = other.ref_count;
             pointer = other.pointer;
