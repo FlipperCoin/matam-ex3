@@ -47,7 +47,7 @@ namespace mtm {
     void Vector<T>::resize() {
         auto temp = new T[size * 2];
 
-        for (int i = 0; i < count; i++) {
+        for (size_t i = 0; i < count; i++) {
             temp[i] = data[i];
         }
         delete[] data;
@@ -73,7 +73,8 @@ namespace mtm {
 
     template<typename T>
     void Vector<T>::sort_int() {
-        int i, j, min, temp;
+        size_t i, j, min;
+        int temp;
         for (i = 0; i < count - 1; i++) {
             min = i;
             for (j = i + 1; j < count; j++) {
@@ -89,7 +90,7 @@ namespace mtm {
 
     template<typename T>
     int Vector<T>::find(const T &item) const {
-        for (int i = 0; i < count; i++) {
+        for (size_t i = 0; i < count; i++) {
             if (data[i] == item) {
                 return i;
             }
@@ -121,7 +122,7 @@ namespace mtm {
     template<typename T>
     Vector<T>::Vector(const Vector<T> &other) : size(other.size), count(other.count){
         data = new T[other.size];
-        for (int i = 0; i < count; i++) {
+        for (size_t i = 0; i < count; i++) {
             data[i] = other[i];
         }
     }

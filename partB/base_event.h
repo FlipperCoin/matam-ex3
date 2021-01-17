@@ -25,6 +25,7 @@ namespace mtm {
                 date(date), event_name(event_name), participants(Vector<int>(10)) { }
 
         BaseEvent(const BaseEvent& event) = default;
+        virtual ~BaseEvent() = default;
         virtual void registerParticipant(int student);
         virtual void unregisterParticipant(int student);
         virtual std::ostream& printShort(ostream& stream) const;

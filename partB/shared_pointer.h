@@ -28,7 +28,7 @@ namespace mtm {
         }
 
         SharedPointer& operator=(const SharedPointer& other) {
-            if (other == this) {
+            if (&other == this) {
                 return *this;
             }
 
