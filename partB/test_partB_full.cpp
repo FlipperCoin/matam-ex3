@@ -3,7 +3,6 @@
 #include "open_event.h"
 #include <iostream>
 #include "shared_pointer.h"
-#include "open_event.h"
 
 using namespace mtm;
 
