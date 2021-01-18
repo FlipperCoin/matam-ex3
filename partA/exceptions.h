@@ -21,7 +21,7 @@ namespace mtm {
     class RegistrationBlocked : public Exception {};
     class DateMismatch : public Exception {};
     class NotSupported : public Exception {};
-
+    class InvalidNumber : public Exception {};
 }
 
 #endif

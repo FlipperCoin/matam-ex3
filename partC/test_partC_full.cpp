@@ -23,6 +23,7 @@ protected:
     std::stringstream *string_out;
     std::ostream *out;
     string expected_events_out;
+    string expected_events_out_verbose;
     DateWrap d1 = DateWrap(2,2,3);
     DateWrap d2 = DateWrap(16,6,3);
     DateWrap d3 = DateWrap(9,1,4);
@@ -40,6 +41,10 @@ protected:
         expected_events_out = string((std::istreambuf_iterator<char>(f)), std::istreambuf_iterator<char>());
         f.close();
 
+        std::ifstream f2("../outputs_full/events_out_verbose.txt");
+        expected_events_out_verbose = string((std::istreambuf_iterator<char>(f2)), std::istreambuf_iterator<char>());
+        f2.close();
+
         addEvents(s_filled);
     }
 
@@ -49,7 +54,7 @@ protected:
         delete string_out;
     }
 
-    void addEvents(Schedule* s) {
+    void addEvents(Schedule* s1) {
         // different events
         // events on the same day
         // events with the same name on different day
@@ -113,14 +118,14 @@ protected:
         auto ec7 = OneTimeEvent<OpenEvent>(d4, "event13");
         auto ec8 = OneTimeEvent<OpenEvent>(d5, "event14");
 
-        s->addEvents(ec2);
-        s->addEvents(ec8);
-        s->addEvents(ec3);
-        s->addEvents(ec5);
-        s->addEvents(ec1);
-        s->addEvents(ec6);
-        s->addEvents(ec7);
-        s->addEvents(ec4);
+        s1->addEvents(ec2);
+        s1->addEvents(ec8);
+        s1->addEvents(ec3);
+        s1->addEvents(ec5);
+        s1->addEvents(ec1);
+        s1->addEvents(ec6);
+        s1->addEvents(ec7);
+        s1->addEvents(ec4);
     }
 };
 
@@ -223,56 +228,163 @@ TEST_F(ScheduleTests, unregisterFromEventNormal) {
     );
 }
 TEST_F(ScheduleTests, unregisterFromEventNotRegistered) {
-
+    EXPECT_THROW(s_filled->unregisterFromEvent(d1,"event2",10),NotRegistered);
 }
 TEST_F(ScheduleTests, unregisterFromEventDoesNotExist) {
-
+    EXPECT_THROW(s_filled->unregisterFromEvent(d4,"event2",1),EventDoesNotExist);
+    EXPECT_THROW(s_filled->unregisterFromEvent(d1,"event20",1),EventDoesNotExist);
+    EXPECT_THROW(s_filled->unregisterFromEvent(DateWrap(5,5,5),"event1",1),EventDoesNotExist);
+    EXPECT_THROW(s_filled->unregisterFromEvent(DateWrap(5,5,5),"event20",1),EventDoesNotExist);
 }
 TEST_F(ScheduleTests, printAllEventsNormal) {
+    s_filled->printAllEvents();
 
+    EXPECT_EQ(string_out->str(), expected_events_out);
 }
 TEST_F(ScheduleTests, printAllEventsNoEvents) {
+    s->printAllEvents();
 
+    EXPECT_EQ(string_out->str(), "");
 }
 TEST_F(ScheduleTests, printMonthEventsNormal) {
     // contain same month but diff year, same year diff month
+
+    std::ifstream f("../outputs_full/events_out_month.txt");
+    string expected_events_out_month = string((std::istreambuf_iterator<char>(f)), std::istreambuf_iterator<char>());
+    f.close();
+
+    s_filled->printMonthEvents(d2.month(),d2.year());
+    EXPECT_EQ(string_out->str(), "event10 16/6/3\n\n"
+                                 "event2 16/6/3\n\n"
+                                 "event9 16/6/3\n\n");
+
+    string_out->str(std::string());
+    s_filled->printMonthEvents(d1.month(),d1.year());
+    EXPECT_EQ(string_out->str(), "event0 2/2/3\n\n"
+                                 "event1 2/2/3\n\n"
+                                 "event2 2/2/3\n\n"
+                                 "event3 2/2/3\n\n"
+                                 "event4 2/2/3\n\n"
+                                 "event5 2/2/3\n\n"
+                                 "event6 2/2/3\n\n"
+                                 "event7 2/2/3\n\n");
+
+    string_out->str(std::string());
+    s_filled->printMonthEvents(d4.month(),d4.year());
+    EXPECT_EQ(string_out->str(), "event13 9/2/4\n\n");
+
+    string_out->str(std::string());
+    s_filled->printMonthEvents(d5.month(),d5.year());
+    EXPECT_EQ(string_out->str(), "event14 9/3/4\n\n");
+
+    string_out->str(std::string());
+    s_filled->printMonthEvents(d3.month(),d3.year());
+    EXPECT_EQ(string_out->str(), "event11 9/1/4\n\n"
+                                 "event12 9/1/4\n\n");
 }
 TEST_F(ScheduleTests, printMonthEventsEventsEmpty) {
-
+    EXPECT_NO_THROW(s->printMonthEvents(d1.month(),d1.year()));
+    EXPECT_EQ(string_out->str(), "");
 }
 TEST_F(ScheduleTests, printMonthEventsNoEventsInMonth) {
-
+    EXPECT_NO_THROW(s_filled->printMonthEvents(5,5));
+    EXPECT_EQ(string_out->str(), "");
 }
 TEST_F(ScheduleTests, printMonthEventsInvalidDate) {
-
-}
-bool predicate(const BaseEvent& event) {
-    return true;
+    EXPECT_THROW(s_filled->printMonthEvents(0,d1.year()), InvalidNumber);
+    EXPECT_THROW(s_filled->printMonthEvents(-1,d1.year()), InvalidNumber);
+    EXPECT_THROW(s_filled->printMonthEvents(13,d1.year()), InvalidNumber);
+    EXPECT_NO_THROW(s_filled->printMonthEvents(1,d1.year()));
+    EXPECT_NO_THROW(s_filled->printMonthEvents(12,d1.year()));
 }
 TEST_F(ScheduleTests, printSomeEventsNormal) {
-    s->printSomeEvents([](const BaseEvent& e) {return true;});
-    s->printSomeEvents(predicate);
+    s_filled->printSomeEvents([](const BaseEvent& e) {
+        return ((e.getDate() == DateWrap(9,1,4) && e.getName() == "event11")
+                || (e.getDate() == DateWrap(2,2,3) && e.getName() == "event2")
+                || (e.getDate() == DateWrap(2,2,3) && e.getName() == "event4")
+                || (e.getDate() == DateWrap(16,6,3) && e.getName() == "event9")
+                || (e.getDate() == DateWrap(5,5,5) && e.getName() == "event20") // no such event name or date
+                || (e.getDate() == DateWrap(5,5,5) && e.getName() == "event1") // name exists, no such event date
+                || (e.getDate() == DateWrap(16,6,3) && e.getName() == "event20") // date exists, no such name
+                || (e.getDate() == DateWrap(16,6,3) && e.getName() == "event1") // date & name exist, not together
+        );
+    });
+    EXPECT_EQ(string_out->str(), "event2 2/2/3\n\n"
+                                 "event4 2/2/3\n\n"
+                                 "event9 16/6/3\n\n"
+                                 "event11 9/1/4\n\n");
 }
 TEST_F(ScheduleTests, printSomeEventsAllTruePredicate) {
-
+    s_filled->printSomeEvents([](const BaseEvent& e) {return true;});
+    EXPECT_EQ(string_out->str(), expected_events_out);
 }
 TEST_F(ScheduleTests, printSomeEventsAllFalsePredicate) {
-
+    s_filled->printSomeEvents([](const BaseEvent& e) {return false;});
+    EXPECT_EQ(string_out->str(), "");
 }
 TEST_F(ScheduleTests, printSomeEventsNormalVerbose) {
-
+    s_filled->printSomeEvents([](const BaseEvent& e) {
+        return ((e.getDate() == DateWrap(9,1,4) && e.getName() == "event11")
+                || (e.getDate() == DateWrap(2,2,3) && e.getName() == "event2")
+                || (e.getDate() == DateWrap(2,2,3) && e.getName() == "event4")
+                || (e.getDate() == DateWrap(16,6,3) && e.getName() == "event9")
+                || (e.getDate() == DateWrap(5,5,5) && e.getName() == "event20") // no such event name or date
+                || (e.getDate() == DateWrap(5,5,5) && e.getName() == "event1") // name exists, no such event date
+                || (e.getDate() == DateWrap(16,6,3) && e.getName() == "event20") // date exists, no such name
+                || (e.getDate() == DateWrap(16,6,3) && e.getName() == "event1") // date & name exist, not together
+        );
+    }, true);
+    EXPECT_EQ(string_out->str(), "event2 2/2/3\n"
+                                 "2\n"
+                                 "4\n"
+                                 "5\n\n"
+                                 "event4 2/2/3\n"
+                                 "3\n"
+                                 "5\n"
+                                 "6\n\n"
+                                 "event9 16/6/3\n"
+                                 "3\n"
+                                 "5\n\n"
+                                 "event11 9/1/4\n\n");
 }
 TEST_F(ScheduleTests, printSomeEventsAllTruePredicateVerbose) {
-
+    s_filled->printSomeEvents([](const BaseEvent& e) {return true;}, true);
+    EXPECT_EQ(string_out->str(), expected_events_out_verbose);
 }
 TEST_F(ScheduleTests, printSomeEventsAllFalsePredicateVerbose) {
-
+    s_filled->printSomeEvents([](const BaseEvent& e) {return false;});
+    EXPECT_EQ(string_out->str(), "");
 }
 TEST_F(ScheduleTests, printEventDetailsNormal) {
+    s_filled->printEventDetails(d4, "event13");
+    EXPECT_EQ(string_out->str(), "event13 9/2/4\n\n");
+
+    string_out->str(std::string());
+    s_filled->printEventDetails(d1, "event3");
+    EXPECT_EQ(string_out->str(), "event3 2/2/3\n"
+                                 "1\n"
+                                 "2\n"
+                                 "6\n\n");
+
+    string_out->str(std::string());
+    s_filled->printEventDetails(d1, "event2");
+    EXPECT_EQ(string_out->str(), "event2 2/2/3\n"
+                                 "2\n"
+                                 "4\n"
+                                 "5\n\n");
+
+    string_out->str(std::string());
+    s_filled->printEventDetails(d2, "event2");
+    EXPECT_EQ(string_out->str(), "event2 16/6/3\n"
+                                 "3\n\n");
+
 
 }
 TEST_F(ScheduleTests, printEventDetailsDoesNotExist) {
-
+    EXPECT_THROW(s_filled->printEventDetails(DateWrap(5,5,5),"event1"),EventDoesNotExist);
+    EXPECT_THROW(s_filled->printEventDetails(DateWrap(5,5,5),"event20"),EventDoesNotExist);
+    EXPECT_THROW(s_filled->printEventDetails(d1,"event20"),EventDoesNotExist);
+    EXPECT_THROW(s_filled->printEventDetails(d1,"event9"),EventDoesNotExist);
 }
 
 int main(int argc, char **argv) {

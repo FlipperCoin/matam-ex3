@@ -54,20 +54,15 @@ namespace mtm {
         return event_name < event.event_name;
     }
 
-     DateWrap BaseEvent::getDate() const {
-        DateWrap temp_date = this->date;
-        return temp_date;
+     const DateWrap& BaseEvent::getDate() const {
+        return date;
     }
 
     bool BaseEvent::operator==(const BaseEvent &event) const {
         return (date == event.date && event_name == event.event_name);
     }
 
-    const DateWrap &BaseEvent::getDate() {
-        return date;
-    }
-
-    const string &BaseEvent::getName() {
+    const string &BaseEvent::getName() const {
         return event_name;
     }
 }

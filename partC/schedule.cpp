@@ -42,7 +42,7 @@ namespace mtm {
 
     void Schedule::printMonthEvents(int month, int year) const {
         if (month < 1 || month > 12) {
-            throw Exception(); // TODO
+            throw InvalidNumber();
         }
 
         std::vector<std::shared_ptr<BaseEvent>> month_events;

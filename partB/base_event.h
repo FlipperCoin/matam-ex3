@@ -32,9 +32,8 @@ namespace mtm {
         virtual std::ostream& printLong(std::ostream& stream) const;
         virtual BaseEvent* clone() const = 0;
         bool isStudentNumberValid(int student);
-        DateWrap getDate() const;
-        const DateWrap& getDate();
-        const string& getName();
+        const DateWrap& getDate() const;
+        const string& getName() const;
         BaseEvent& operator=(const BaseEvent &event) = delete;
         bool operator<(const BaseEvent &event);
         bool operator==(const BaseEvent &event) const;
