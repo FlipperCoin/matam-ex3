@@ -73,9 +73,11 @@ namespace mtm {
 
     template<typename T>
     void Vector<T>::sort_int() {
+        if (count <= 0) return;
+
         size_t i, j, min;
         int temp;
-        for (i = 0; i < count - 1; i++) {
+        for (i = 0; i < (count - 1); i++) {
             min = i;
             for (j = i + 1; j < count; j++) {
                 if (data[j] < data[min]) {

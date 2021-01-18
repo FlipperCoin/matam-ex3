@@ -13,7 +13,7 @@ namespace mtm {
         for(const BaseEvent& event : container) {
             auto found = findEvent(events_copy, event);
 
-            if (found != events.end()) {
+            if (found != events_copy.end()) {
                 throw EventAlreadyExists();
             }
 
@@ -87,7 +87,7 @@ namespace mtm {
         std::sort(events.begin(),
                   events.end(),
                   [](const std::shared_ptr<BaseEvent>& first, const std::shared_ptr<BaseEvent>& second) {
-                        return first < second;
+                        return *first < *second;
                     });
     }
 

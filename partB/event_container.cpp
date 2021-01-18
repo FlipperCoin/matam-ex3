@@ -4,6 +4,8 @@
 namespace mtm {
 
     void EventContainer::sort() {
+        if (events.getCount() <= 0) return;
+
         int i, j, min;
         SharedPointer<BaseEvent> temp;
         for (i = 0; i < events.getCount() - 1; i++) {
