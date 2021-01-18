@@ -11,6 +11,8 @@ namespace mtm {
     protected:
         Vector<SharedPointer<BaseEvent>> events;
         void sort();
+        EventContainer(const EventContainer& other);
+        EventContainer& operator=(const EventContainer& other);
     public:
         struct EventIterator {
         private:

@@ -161,9 +161,19 @@ TEST_F(ScheduleTests, addDuplicateEvent2) {
     s_filled->printAllEvents();
     EXPECT_EQ(string_out->str(), expected_events_out);
 }
-TEST_F(ScheduleTests, sanity) {
-    // make sure all works logically & everything memory-safe
-    // add a lot from different containers, register, unregister, print all kinds of stuff.
+TEST_F(ScheduleTests, addDuplicateEvent3) {
+    auto d1 = DateWrap(2,2,3);
+    auto e3 = OpenEvent(d1, "event20");
+    auto e4 = OpenEvent(d1, "event30");
+    auto e4tag = ClosedEvent(d1, "event30");
+    auto ec3 = Festival(d1);
+    ec3.add(e3);
+    ec3.add(e4);
+    ec3.add(e4tag);
+
+    EXPECT_THROW(s_filled->addEvents(ec3), EventAlreadyExists);
+    s_filled->printAllEvents();
+    EXPECT_EQ(string_out->str(), expected_events_out);
 }
 TEST_F(ScheduleTests, registerToEventNormal) {
     EXPECT_NO_THROW(s_filled->registerToEvent(d2, "event2",1));
@@ -384,7 +394,45 @@ TEST_F(ScheduleTests, printEventDetailsDoesNotExist) {
     EXPECT_THROW(s_filled->printEventDetails(d1,"event20"),EventDoesNotExist);
     EXPECT_THROW(s_filled->printEventDetails(d1,"event9"),EventDoesNotExist);
 }
+TEST_F(ScheduleTests, sanity) {
+    // make sure all works logically & everything memory-safe
+    // add a lot from different containers, register, unregister, print all kinds of stuff.
+    s_filled->unregisterFromEvent(d1,"event5",5);
+    s_filled->unregisterFromEvent(d1,"event4",5);
+    s_filled->registerToEvent(d1,"event4",1);
+    auto e1 = OpenEvent(d5,"event6");
+    e1.registerParticipant(1);
+    e1.registerParticipant(500);
+    e1.registerParticipant(80000);
+    e1.registerParticipant(6);
+    auto e2 = OpenEvent(d5,"event8");
+    e2.registerParticipant(14);
+    e2.registerParticipant(26);
+    auto ec1 = Festival(d5);
+    ec1.add(e1);
+    ec1.add(e2);
+    s_filled->addEvents(ec1);
+    s_filled->addEvents(OneTimeEvent<OpenEvent>(d4,"event(-1)"));
+    s_filled->registerToEvent(d5, "event8", 66);
+    s_filled->unregisterFromEvent(d5, "event6", 1);
 
+    auto *s2 = new Schedule();
+    *s2 = *s_filled;
+    s2->addEvents(OneTimeEvent<OpenEvent>(d3,"event100"));
+    EXPECT_NO_THROW(s_filled->registerToEvent(d2, "event9", 4));
+    EXPECT_NO_THROW(s2->registerToEvent(d2, "event9", 4));
+    EXPECT_THROW(s2->registerToEvent(d2, "event9", 3), AlreadyRegistered);
+
+    s_filled->unregisterFromEvent(d5,"event8", 26);
+    s_filled->unregisterFromEvent(d2,"event2",3);
+    s_filled->registerToEvent(d5, "event6", 234);
+    s_filled->registerToEvent(d2, "event2", 5);
+    delete s2;
+
+    s_filled->unregisterFromEvent(d2,"event2",5);
+    s_filled->registerToEvent(d2, "event2", 3);
+    s_filled->unregisterFromEvent(d2,"event2", 3);
+}
 int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();

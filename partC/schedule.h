@@ -23,10 +23,9 @@ namespace mtm {
     public:
         Schedule() : Schedule(&std::cout) {};
         explicit Schedule(std::ostream* output) : output(output) {};
-        Schedule(const Schedule& other) = default;
-        Schedule(Schedule&& other) noexcept = default;
+        Schedule(const Schedule& other);
         ~Schedule() = default;
-        Schedule& operator=(const Schedule& other) = default;
+        Schedule& operator=(Schedule other);
         void addEvents(const EventContainer& container);
         void registerToEvent(const DateWrap& event_date, const std::string& event_name, int student);
         void unregisterFromEvent(const DateWrap& event_date, const std::string& event_name, int student);

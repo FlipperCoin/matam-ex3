@@ -4,8 +4,6 @@
 #include <memory>
 
 // TODO: check if lambda is allowed
-// TODO: make sure self-assignment is checked everywhere & tested
-// TODO: valid student 1234567890
 namespace mtm {
 
     void Schedule::addEvents(const EventContainer& container) {
@@ -27,13 +25,13 @@ namespace mtm {
     void Schedule::registerToEvent(const DateWrap &event_date, const std::string &event_name, int student) {
         auto event = findEvent(event_date, event_name);
 
-        (*safeGetEvent(event)).registerParticipant(student); // TODO: check with Zoe that it throws whatever is needed
+        (*safeGetEvent(event)).registerParticipant(student);
     }
 
     void Schedule::unregisterFromEvent(const DateWrap &event_date, const std::string &event_name, int student) {
         auto event = findEvent(event_date, event_name);
 
-        (*safeGetEvent(event)).unregisterParticipant(student); // TODO: check with Zoe
+        (*safeGetEvent(event)).unregisterParticipant(student);
     }
 
     void Schedule::printAllEvents() const {
@@ -118,5 +116,17 @@ namespace mtm {
         }
 
         return *iterator;
+    }
+
+    Schedule::Schedule(const Schedule &other) : output(other.output) {
+        for (const auto& event : other.events) {
+            events.push_back(std::shared_ptr<BaseEvent>(event->clone()));
+        }
+    }
+
+    Schedule &Schedule::operator=(Schedule other) {
+        events = other.events;
+        output = other.output;
+        return *this;
     }
 }

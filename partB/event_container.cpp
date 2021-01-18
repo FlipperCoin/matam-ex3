@@ -37,6 +37,21 @@ namespace mtm {
         return EventContainer::ConstEventIterator(events, events.getCount());
     }
 
+    // TODO: Check this
+    EventContainer::EventContainer(const EventContainer &other) {
+        for (int i = 0; i < other.events.getCount(); ++i) {
+            events.add(SharedPointer<BaseEvent>(other.events[i]->clone()));
+        }
+    }
+    // TODO: Check this
+    EventContainer &EventContainer::operator=(const EventContainer &other) {
+        events = Vector<SharedPointer<BaseEvent>>();
+        for (int i = 0; i < other.events.getCount(); ++i) {
+            events.add(SharedPointer<BaseEvent>(other.events[i]->clone()));
+        }
+        return *this;
+    }
+
     EventContainer::EventIterator& EventContainer::EventIterator::operator=(const EventContainer::EventIterator &iter) {
         if (&iter == this) {
             return *this;
