@@ -13,8 +13,6 @@
 
 using namespace mtm;
 
-
-
 class ScheduleTests : public ::testing::Test {
 
 protected:
