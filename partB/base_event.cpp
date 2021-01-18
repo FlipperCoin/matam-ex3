@@ -1,5 +1,6 @@
 #include "base_event.h"
 #include "exceptions.h"
+#include "vector.h"
 
 namespace mtm {
 
