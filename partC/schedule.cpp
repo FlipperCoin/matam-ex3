@@ -57,14 +57,6 @@ namespace mtm {
         printEvents(month_events);
     }
 
-    template<class Predicate>
-    void Schedule::printSomeEvents(Predicate predicate, bool verbose) const {
-        std::vector<std::shared_ptr<BaseEvent>> some_events;
-        std::copy_if(events.begin(), events.end(), std::back_inserter(some_events), predicate);
-
-        printEvents(some_events);
-    }
-
     void Schedule::printEventDetails(const DateWrap &event_date, const std::string &event_name) const {
         auto event = findEvent(event_date, event_name);
 

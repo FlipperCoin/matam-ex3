@@ -79,8 +79,12 @@ TEST_F(ScheduleTests, printMonthEventsNoEventsInMonth) {
 TEST_F(ScheduleTests, printMonthEventsInvalidDate) {
 
 }
+bool predicate(const BaseEvent& event) {
+    return true;
+}
 TEST_F(ScheduleTests, printSomeEventsNormal) {
-
+    s->printSomeEvents([](const BaseEvent& e) {return true;});
+    s->printSomeEvents(predicate);
 }
 TEST_F(ScheduleTests, printSomeEventsAllTruePredicate) {
 

@@ -3,11 +3,11 @@
 
 #include <vector>
 #include <memory>
+#include <algorithm>
 #include "date_wrap.h"
 #include "event_container.h"
 
 namespace mtm {
-
     class Schedule {
     private:
         std::ostream* output;
@@ -32,11 +32,22 @@ namespace mtm {
         void unregisterFromEvent(const DateWrap& event_date, const std::string& event_name, int student);
         void printAllEvents() const;
         void printMonthEvents(int month, int year) const;
-        template <class Predicate>
+
+        template<typename Predicate>
         void printSomeEvents(Predicate predicate, bool verbose = false) const;
         void printEventDetails(const DateWrap& event_date, const std::string& event_name) const;
     };
 
+    template<typename Predicate>
+    void Schedule::printSomeEvents(Predicate predicate, bool verbose) const {
+        std::vector<std::shared_ptr<BaseEvent>> some_events;
+        std::copy_if(events.begin(),
+                     events.end(),
+                     std::back_inserter(some_events),
+                     [&predicate](const std::shared_ptr<BaseEvent>& event) { return predicate(*event); });
+
+        printEvents(some_events, verbose);
+    }
 }
 
 #endif
