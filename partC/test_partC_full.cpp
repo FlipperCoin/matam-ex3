@@ -127,8 +127,6 @@ protected:
     }
 };
 
-// TODO: Should check input validity of date / student / event name?
-
 TEST_F(ScheduleTests, addEventsNormal) {
     addEvents(s);
 
