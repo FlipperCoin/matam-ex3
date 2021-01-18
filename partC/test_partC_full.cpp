@@ -2,58 +2,225 @@
 #include "date_wrap.h"
 #include "exceptions.h"
 #include "schedule.h"
+#include "one_time_event.h"
+#include "festival.h"
+#include "recurring_event.h"
+#include "open_event.h"
+#include "closed_event.h"
+#include "custom_event.h"
+#include <fstream>
+#include <iostream>
 
 using namespace mtm;
+
+
 
 class ScheduleTests : public ::testing::Test {
 
 protected:
     Schedule *s;
-    std::stringstream *out;
+    Schedule *s_filled;
+    std::stringstream *string_out;
+    std::ostream *out;
+    string expected_events_out;
+    DateWrap d1 = DateWrap(2,2,3);
+    DateWrap d2 = DateWrap(16,6,3);
+    DateWrap d3 = DateWrap(9,1,4);
+    DateWrap d4 = DateWrap(9,2,4);
+    DateWrap d5 = DateWrap(9,3,4);
 
     void SetUp() override {
-        out = new std::stringstream;
+        string_out = new std::stringstream;
+//        out = &std::cout;
+        out = string_out;
         s = new Schedule(out);
+        s_filled = new Schedule(out);
+
+        std::ifstream f("../outputs_full/events_out.txt");
+        expected_events_out = string((std::istreambuf_iterator<char>(f)), std::istreambuf_iterator<char>());
+        f.close();
+
+        addEvents(s_filled);
     }
 
     void TearDown() override {
         delete s;
+        delete s_filled;
+        delete string_out;
+    }
+
+    void addEvents(Schedule* s) {
+        // different events
+        // events on the same day
+        // events with the same name on different day
+        auto ec1 = OneTimeEvent<OpenEvent>(d1,"event0");
+
+        auto e1 = OpenEvent(d1, "event1");
+        e1.registerParticipant(1);
+        e1.registerParticipant(4);
+        e1.registerParticipant(6);
+        auto e3 = ClosedEvent(d1, "event3");
+        e3.addInvitee(1);e3.registerParticipant(1);
+        e3.addInvitee(2);e3.registerParticipant(2);
+        e3.addInvitee(6);e3.registerParticipant(6);
+        auto ec2 = Festival(d1);
+        auto e2 = ClosedEvent(d1, "event2");
+        e2.addInvitee(2);e2.registerParticipant(2);
+        e2.addInvitee(4);e2.registerParticipant(4);
+        e2.addInvitee(5);e2.registerParticipant(5);
+        e2.addInvitee(7); // used in later tests
+        ec2.add(e3);
+        ec2.add(e1);
+        ec2.add(e2);
+
+        auto e5 = ClosedEvent(d1, "event5");
+        e5.addInvitee(2);e5.registerParticipant(2);
+        e5.addInvitee(4);e5.registerParticipant(4);
+        e5.addInvitee(5);e5.registerParticipant(5);
+        auto e4 = OpenEvent(d1, "event4");
+        e4.registerParticipant(3);
+        e4.registerParticipant(5);
+        e4.registerParticipant(6);
+        auto e6 = ClosedEvent(d1, "event6");
+        e6.addInvitee(2);e6.registerParticipant(2);
+        e6.addInvitee(4);e6.registerParticipant(4);
+        e6.addInvitee(5);e6.registerParticipant(5);
+        auto e7 = CustomEvent<bool (*)(int)>(d1, "event7", [](int){return true;});
+        e7.registerParticipant(3);
+        auto ec3 = Festival(d1);
+        ec3.add(e4);
+        ec3.add(e7);
+        ec3.add(e5);
+        ec3.add(e6);
+
+
+        auto e9 = OpenEvent(d2, "event9");
+        e9.registerParticipant(3);
+        e9.registerParticipant(5);
+        auto e8 = OpenEvent(d2, "event2"); // same name diff day
+        e8.registerParticipant(3);
+        auto e10 = CustomEvent<bool (*)(int)>(d2, "event10", [](int){return true;});
+        e10.registerParticipant(1);
+        e10.registerParticipant(2);
+        e10.registerParticipant(4);
+        auto ec4 = Festival(d2);
+        ec4.add(e10);
+        ec4.add(e8);
+        ec4.add(e9);
+
+        auto ec5 = OneTimeEvent<OpenEvent>(d3, "event11");
+        auto ec6 = OneTimeEvent<OpenEvent>(d3, "event12");
+        auto ec7 = OneTimeEvent<OpenEvent>(d4, "event13");
+        auto ec8 = OneTimeEvent<OpenEvent>(d5, "event14");
+
+        s->addEvents(ec2);
+        s->addEvents(ec8);
+        s->addEvents(ec3);
+        s->addEvents(ec5);
+        s->addEvents(ec1);
+        s->addEvents(ec6);
+        s->addEvents(ec7);
+        s->addEvents(ec4);
     }
 };
 
 // TODO: Should check input validity of date / student / event name?
 
 TEST_F(ScheduleTests, addEventsNormal) {
-    // different events
-    // events on the same day
-    // events with the same name on different day
+    addEvents(s);
+
+    s->printAllEvents();
+    EXPECT_EQ(string_out->str(), expected_events_out);
 }
 TEST_F(ScheduleTests, addDuplicateEvent) {
-    // add different events and then a container with a duplicate from previous events
-    // make sure schedule stayed the same
+    auto d1 = DateWrap(2,2,3);
+    auto e3 = OpenEvent(d1, "event20");
+    auto e4 = OpenEvent(d1, "event4");
+    auto ec3 = Festival(d1);
+    ec3.add(e3);
+    ec3.add(e4);
+
+    EXPECT_THROW(s_filled->addEvents(ec3), EventAlreadyExists);
+    s_filled->printAllEvents();
+    EXPECT_EQ(string_out->str(), expected_events_out);
 }
 TEST_F(ScheduleTests, addDuplicateEvent2) {
-    // if possible: add different events and then a container with a duplicate in the same container
-    // make sure schedule stayed the same
+    auto d1 = DateWrap(2,2,3);
+    auto e3 = OpenEvent(d1, "event20");
+    auto e4 = OpenEvent(d1, "event30");
+    auto e4tag = OpenEvent(d1, "event30");
+    auto ec3 = Festival(d1);
+    ec3.add(e3);
+    ec3.add(e4);
+    ec3.add(e4tag);
+
+    EXPECT_THROW(s_filled->addEvents(ec3), EventAlreadyExists);
+    s_filled->printAllEvents();
+    EXPECT_EQ(string_out->str(), expected_events_out);
 }
 TEST_F(ScheduleTests, sanity) {
     // make sure all works logically & everything memory-safe
     // add a lot from different containers, register, unregister, print all kinds of stuff.
 }
 TEST_F(ScheduleTests, registerToEventNormal) {
+    EXPECT_NO_THROW(s_filled->registerToEvent(d2, "event2",1));
+    s_filled->registerToEvent(d2, "event2", 5);
+    s_filled->registerToEvent(d1, "event2", 7);
+    s_filled->registerToEvent(d3,"event11",7);
 
+    s_filled->printEventDetails(d2,"event2");
+    s_filled->printEventDetails(d1,"event2");
+    s_filled->printEventDetails(d3,"event11");
+
+    EXPECT_EQ(string_out->str(), "event2 16/6/3\n"
+                                 "1\n"
+                                 "3\n"
+                                 "5\n\n"
+                                 "event2 2/2/3\n"
+                                 "2\n"
+                                 "4\n"
+                                 "5\n"
+                                 "7\n\n"
+                                 "event11 9/1/4\n"
+                                 "7\n\n"
+                                 );
 }
 TEST_F(ScheduleTests, registerToEventAlreadyRegistered) {
-
+    EXPECT_NO_THROW(s_filled->registerToEvent(d2, "event2",1));
+    EXPECT_NO_THROW(s_filled->registerToEvent(d1, "event2", 7));
+    EXPECT_THROW(s_filled->registerToEvent(d1, "event3", 2),AlreadyRegistered);
 }
 TEST_F(ScheduleTests, registerToEventRegistrationBlocked) {
-
+    EXPECT_NO_THROW(s_filled->registerToEvent(d1, "event4", 7));
+    EXPECT_NO_THROW(s_filled->registerToEvent(d4, "event13", 1));
+    EXPECT_THROW(s_filled->registerToEvent(d1,"event5",8),RegistrationBlocked);
 }
 TEST_F(ScheduleTests, registerToEventDoesNotExist) {
-
+    EXPECT_THROW(s_filled->registerToEvent(d2,"event20",2), EventDoesNotExist); // date exists, name doesnt
+    EXPECT_THROW(s_filled->registerToEvent(DateWrap(5,5,5),"event1",3), EventDoesNotExist); // name exists, date doesnt
+    EXPECT_THROW(s_filled->registerToEvent(d2,"event1",3), EventDoesNotExist); // name & date exist but not same
+    EXPECT_THROW(s_filled->registerToEvent(DateWrap(5,5,5),"event20",3), EventDoesNotExist); // name & date does not exist
 }
 TEST_F(ScheduleTests, unregisterFromEventNormal) {
+    EXPECT_NO_THROW(s_filled->unregisterFromEvent(d1,"event2",2));
+    EXPECT_NO_THROW(s_filled->unregisterFromEvent(d1,"event4",5));
+    EXPECT_NO_THROW(s_filled->unregisterFromEvent(d1,"event4",6));
+    EXPECT_NO_THROW(s_filled->unregisterFromEvent(d2,"event9",5));
+    EXPECT_NO_THROW(s_filled->unregisterFromEvent(d2,"event2",3));
 
+    s_filled->printEventDetails(d1,"event2");
+    s_filled->printEventDetails(d1,"event4");
+    s_filled->printEventDetails(d2,"event9");
+    s_filled->printEventDetails(d2,"event2");
+    EXPECT_EQ(string_out->str(),"event2 2/2/3\n"
+                                 "4\n"
+                                 "5\n\n"
+                                 "event4 2/2/3\n"
+                                 "3\n\n"
+                                 "event9 16/6/3\n"
+                                 "3\n\n"
+                                 "event2 16/6/3\n\n"
+    );
 }
 TEST_F(ScheduleTests, unregisterFromEventNotRegistered) {
 
