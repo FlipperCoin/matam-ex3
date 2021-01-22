@@ -7,7 +7,6 @@
 using namespace mtm;
 
 static void a() {
-    // TODO: check because added empty constructor
     SharedPointer<BaseEvent> p;
     p = SharedPointer<BaseEvent>(new OpenEvent(DateWrap(1,1,1),"lalala"));
     std::cout << p->getName() << std::endl;

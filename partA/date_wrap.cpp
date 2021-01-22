@@ -18,31 +18,25 @@ namespace mtm {
         }
 
         if (nullptr == date_adt) {
-            throw Exception(); // TODO
-        }
-    }
-
-    void DateWrap::safeDateGet(int &day, int &month, int &year) const {
-        if (!dateGet(date_adt, &day, &month, &year)) {
-            throw Exception(); // TODO
+            throw std::bad_alloc();
         }
     }
 
     int DateWrap::day() const {
         int day, month, year;
-        safeDateGet(day, month, year);
+        dateGet(date_adt, &day, &month, &year);
         return day;
     }
 
     int DateWrap::month() const {
         int day, month, year;
-        safeDateGet(day, month, year);
+        dateGet(date_adt, &day, &month, &year);
         return month;
     }
 
     int DateWrap::year() const {
         int day, month, year;
-        safeDateGet(day, month, year);
+        dateGet(date_adt, &day, &month, &year);
         return year;
     }
 
@@ -115,7 +109,7 @@ namespace mtm {
 
         Date dateAdtCopy = dateCopy(date.date_adt);
         if (dateAdtCopy == nullptr) {
-            throw Exception(); // TODO
+            throw std::bad_alloc();
         }
 
         dateDestroy(date_adt);

@@ -9,7 +9,7 @@ using std::string;
 
 namespace mtm {
     const int MINIMUM_STUDENT_NUMBER = 1;
-    const int MAXIMUM_STUDENT_NUMBER = 20000;
+    const int MAXIMUM_STUDENT_NUMBER = 1234567890;
     const int LIST_RESIZE = 10;
 
     class BaseEvent {
@@ -28,10 +28,9 @@ namespace mtm {
         virtual std::ostream& printShort(ostream& stream) const;
         virtual std::ostream& printLong(std::ostream& stream) const;
         virtual BaseEvent* clone() const = 0;
-        bool isStudentNumberValid(int student);
-        DateWrap getDate() const;
-        const DateWrap& getDate();
-        const string& getName();
+        static bool isStudentNumberValid(int student);
+        const DateWrap& getDate() const;
+        const string& getName() const;
         BaseEvent& operator=(const BaseEvent &event) = delete;
         bool operator<(const BaseEvent &event);
         bool operator==(const BaseEvent &event) const;

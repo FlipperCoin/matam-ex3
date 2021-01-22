@@ -112,10 +112,14 @@ namespace mtm {
 
     template<typename T>
     Vector<T>& Vector<T>::operator=(Vector<T> other) {
+        if (this == &other) {
+            return *this;
+        }
+
         size = other.size;
         count = other.count;
         data = new T[other.size];
-        for (int i = 0; i < count; i++) {
+        for (size_t i = 0; i < count; i++) {
             data[i] = other[i];
         }
         return *this;
