@@ -17,9 +17,6 @@ namespace mtm {
         DateWrap date;
         string event_name;
         Vector<int> participants;
-        //int *participants;
-        //int participants_num;
-        //int participants_max;
     public:
         BaseEvent(const DateWrap &date, const string& event_name) :
                 date(date), event_name(event_name), participants(Vector<int>(10)) { }
