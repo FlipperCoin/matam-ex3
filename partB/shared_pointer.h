@@ -8,15 +8,7 @@ namespace mtm {
     template<typename T>
     class SharedPointer
     {
-    public:
-        explicit SharedPointer(T* pointer) : pointer(pointer), ref_count(new int(1)) {};
-
-        SharedPointer() : pointer(nullptr), ref_count(new int(0)) {};
-
-        ~SharedPointer() {
-            dispose();
-        }
-
+    private:
         void dispose() {
             if ((*ref_count)-- <= 1) {
                 if (pointer != nullptr) {
@@ -24,6 +16,14 @@ namespace mtm {
                 }
                 delete ref_count;
             }
+        }
+    public:
+        explicit SharedPointer(T* pointer) : pointer(pointer), ref_count(new int(1)) {};
+
+        SharedPointer() : pointer(nullptr), ref_count(new int(0)) {};
+
+        ~SharedPointer() {
+            dispose();
         }
 
         SharedPointer(const SharedPointer& other) {

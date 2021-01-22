@@ -115,10 +115,12 @@ namespace mtm {
         if (this == &other) {
             return *this;
         }
+        auto data_temp = new T[other.size];
 
         size = other.size;
         count = other.count;
-        data = new T[other.size];
+        delete[] data;
+        data = data_temp;
         for (size_t i = 0; i < count; i++) {
             data[i] = other[i];
         }

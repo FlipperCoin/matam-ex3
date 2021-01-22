@@ -9,6 +9,7 @@ namespace mtm {
     class ClosedEvent : public BaseEvent{
     private:
         Vector<int> invitees;
+        bool checkInvite(int student);
     public:
         ClosedEvent(const DateWrap& date, const std::string& event_name);
         ClosedEvent(const ClosedEvent &event) = default;
@@ -16,7 +17,6 @@ namespace mtm {
         ~ClosedEvent() override = default;
         ClosedEvent* clone() const override;
         void registerParticipant(int student) override;
-        bool checkInvite(int student);
         void addInvitee(int student);
     };
 }

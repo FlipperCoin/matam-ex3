@@ -14,6 +14,7 @@ namespace mtm {
         DateWrap date;
         std::string event_name;
         Vector<int> participants;
+        static bool isStudentNumberValid(int student);
     public:
         BaseEvent(const DateWrap &date, const std::string& event_name);
 
@@ -24,7 +25,6 @@ namespace mtm {
         virtual std::ostream& printShort(std::ostream& stream) const;
         virtual std::ostream& printLong(std::ostream& stream) const;
         virtual BaseEvent* clone() const = 0;
-        static bool isStudentNumberValid(int student);
         const DateWrap& getDate() const;
         const std::string& getName() const;
         BaseEvent& operator=(const BaseEvent &event) = default;

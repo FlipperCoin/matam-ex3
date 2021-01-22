@@ -16,9 +16,7 @@ namespace mtm {
                 BaseEvent(date, event_name), can_register(can_register){
         };
 
-// TODO: default copy
-        CustomEvent(const CustomEvent &event) : BaseEvent(event), can_register(event.can_register){
-        }
+        CustomEvent(const CustomEvent &event) = default;
         ~CustomEvent() override = default;
         CustomEvent& operator=(const CustomEvent& other) = default;
         CustomEvent* clone() const override{
