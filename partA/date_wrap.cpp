@@ -2,12 +2,9 @@
 #include "date_wrap.h"
 #include "exceptions.h"
 
-namespace mtm {
-    const int MAX_DAY = 30;
-    const int MIN_DAY = 1;
-    const int MAX_MONTH = 12;
-    const int MIN_MONTH = 1;
+using std::ostream;
 
+namespace mtm {
     static bool isDateValid(int day, int month) {
         return !(day < 1 || day > 30 || month < 1 || month > 12);
     }

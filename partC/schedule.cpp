@@ -3,7 +3,8 @@
 #include <algorithm>
 #include <memory>
 
-// TODO: check if lambda is allowed
+using std::string;
+
 namespace mtm {
 
     void Schedule::addEvents(const EventContainer& container) {

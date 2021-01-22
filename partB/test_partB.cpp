@@ -20,11 +20,6 @@ void printEventsShort(mtm::EventContainer& events) {
     }
 }
 
-//void test0() {
-//    mtm::BaseEvent(mtm::DateWrap(21, 10, 2020), "event1", nullptr, 4);
-//    std::cout << "done" << std::endl;
-//}
-
 void test1() {
     mtm::Festival festival(mtm::DateWrap(21, 10, 2020));
     festival.add(mtm::OpenEvent(mtm::DateWrap(21, 10, 2020), "Performance 1"));
@@ -79,15 +74,15 @@ const Test tests[] = {test1, test2};
 
 
 int main(int argc, char* argv[]) {
-//    if (argc < 2) {
+    if (argc < 2) {
         test1();
-        //test2();
-//    } else if (argc > 2) {
-//        std::cout << "invalid arguments" << std::endl;
-//    } else {
-//        int i = std::atoi(argv[1]);
-//        tests[i - 1]();
-//        //test1();
-//    }
+        test2();
+    } else if (argc > 2) {
+        std::cout << "invalid arguments" << std::endl;
+    } else {
+        int i = std::atoi(argv[1]);
+        tests[i - 1]();
+        test1();
+    }
     return 0;
 }

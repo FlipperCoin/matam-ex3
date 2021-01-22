@@ -12,6 +12,7 @@
 #include <iostream>
 
 using namespace mtm;
+using std::string;
 
 class ScheduleTests : public ::testing::Test {
 
@@ -20,8 +21,8 @@ protected:
     Schedule *s_filled;
     std::stringstream *string_out;
     std::ostream *out;
-    string expected_events_out;
-    string expected_events_out_verbose;
+    std::string expected_events_out;
+    std::string expected_events_out_verbose;
     DateWrap d1 = DateWrap(2,2,3);
     DateWrap d2 = DateWrap(16,6,3);
     DateWrap d3 = DateWrap(9,1,4);
@@ -36,11 +37,11 @@ protected:
         s_filled = new Schedule(out);
 
         std::ifstream f("../outputs_full/events_out.txt");
-        expected_events_out = string((std::istreambuf_iterator<char>(f)), std::istreambuf_iterator<char>());
+        expected_events_out = std::string((std::istreambuf_iterator<char>(f)), std::istreambuf_iterator<char>());
         f.close();
 
         std::ifstream f2("../outputs_full/events_out_verbose.txt");
-        expected_events_out_verbose = string((std::istreambuf_iterator<char>(f2)), std::istreambuf_iterator<char>());
+        expected_events_out_verbose = std::string((std::istreambuf_iterator<char>(f2)), std::istreambuf_iterator<char>());
         f2.close();
 
         addEvents(s_filled);

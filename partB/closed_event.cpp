@@ -18,6 +18,10 @@ namespace mtm {
     }
 
     bool ClosedEvent::checkInvite(int student){
+        if (!isStudentNumberValid(student)) {
+            throw InvalidStudent();
+        }
+
         if(invitees.find(student) != -1){
             return true;
         }
@@ -38,5 +42,10 @@ namespace mtm {
 
     ClosedEvent *ClosedEvent::clone() const {
         return (new ClosedEvent(*this));
+    }
+
+    ClosedEvent::ClosedEvent(const DateWrap &date, const std::string &event_name)
+        : BaseEvent(date, event_name), invitees(Vector<int>(10)) {
+
     }
 }

@@ -2,6 +2,8 @@
 #include "exceptions.h"
 #include "vector.h"
 
+using std::string;
+
 namespace mtm {
 
     void BaseEvent::registerParticipant(int student) {
@@ -18,6 +20,10 @@ namespace mtm {
     }
 
     void BaseEvent::unregisterParticipant(int student) {
+        if (!isStudentNumberValid(student)) {
+            throw InvalidStudent();
+        }
+
         int index = participants.find(student);
         if (index == -1) {
             throw NotRegistered();
@@ -65,5 +71,10 @@ namespace mtm {
 
     const string &BaseEvent::getName() const {
         return event_name;
+    }
+
+    BaseEvent::BaseEvent(const DateWrap &date, const string &event_name) :
+            date(date), event_name(event_name), participants(Vector<int>(10)) {
+
     }
 }

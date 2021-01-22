@@ -8,4 +8,8 @@ namespace mtm {
         events.add(SharedPointer<BaseEvent>(event.clone()));
         sort();
     }
+
+    Festival::Festival(const DateWrap &date)  : EventContainer(), festival_date(date) {
+
+    }
 }

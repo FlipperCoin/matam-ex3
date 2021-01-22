@@ -7,12 +7,8 @@ namespace mtm {
     class OpenEvent : public BaseEvent {
 
     public:
-        OpenEvent(const DateWrap &date, const string& event_name)
-                : BaseEvent(date,event_name) {
-        };
-        OpenEvent* clone() const override{
-            return (new OpenEvent(*this));
-        };
+        OpenEvent(const DateWrap &date, const std::string& event_name);
+        OpenEvent* clone() const override;
     };
 }
 

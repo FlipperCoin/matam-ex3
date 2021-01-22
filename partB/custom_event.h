@@ -12,7 +12,7 @@ namespace mtm {
         CanRegister can_register;
 
     public:
-        CustomEvent(const DateWrap& date, const string& event_name, CanRegister can_register):
+        CustomEvent(const DateWrap& date, const std::string& event_name, CanRegister can_register):
                 BaseEvent(date, event_name), can_register(can_register){
         };
 

@@ -10,9 +10,7 @@ namespace mtm {
     private:
         Vector<int> invitees;
     public:
-        ClosedEvent(const DateWrap& date, const string& event_name):
-                    BaseEvent(date, event_name), invitees(Vector<int>(10)){
-        };
+        ClosedEvent(const DateWrap& date, const std::string& event_name);
         ClosedEvent(const ClosedEvent &event) = default;
         ClosedEvent* clone() const override;
         void registerParticipant(int student) override;

@@ -2,10 +2,8 @@
 #ifndef _EXCEPTIONS_
 #define _EXCEPTIONS_
 
-using std::exception;
-
 namespace mtm {
-    class Exception : public exception {};
+    class Exception : public std::exception {};
 
     // DateWrap
     class NegativeDays : public Exception {};

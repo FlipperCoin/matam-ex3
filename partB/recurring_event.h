@@ -8,27 +8,26 @@
 #include "exceptions.h"
 
 namespace mtm {
-    //typedef EventType OpenEvent;
     template<class EventType>
     class RecurringEvent : public EventContainer{
     private:
         DateWrap first_date;
-        string event_name;
-        int interval_days;
+        std::string event_name;
         int num_occurrences;
+        int interval_days;
     public:
-        RecurringEvent(const DateWrap& _first_date, const string& _event_name, int _interval_days, int _num_occurrences) :
-        first_date(_first_date), interval_days(_interval_days), num_occurrences(_num_occurrences){
-            if (interval_days < 0){
+        RecurringEvent(const DateWrap& _first_date, const std::string& _event_name, int _num_occurrences, int _interval_days) :
+        first_date(_first_date), event_name(_event_name), num_occurrences(_num_occurrences), interval_days(_interval_days){
+            if (interval_days <= 0){
                 throw InvalidInterval();
             }
-            if (num_occurrences < 0){
+            if (num_occurrences <= 0){
                 throw InvalidNumber();
             }
             DateWrap current_event_date = first_date;
             for (int i = 0; i < num_occurrences; ++i) {
                 events.add(SharedPointer<BaseEvent>(new EventType(current_event_date, event_name)));
-                current_event_date = current_event_date + interval_days; // += allowed??
+                current_event_date += interval_days;
             }
         };
 
