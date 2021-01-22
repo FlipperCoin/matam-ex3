@@ -11,6 +11,9 @@ namespace mtm {
     public:
         explicit Festival(const DateWrap& date);
         void add(const BaseEvent& event) override;
+        Festival(const Festival& other) = default;
+        ~Festival() override = default;
+        Festival& operator=(const Festival& other) = default;
     };
 }
 

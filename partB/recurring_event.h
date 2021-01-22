@@ -34,6 +34,10 @@ namespace mtm {
         void add(const BaseEvent& event) override{
             throw NotSupported();
         }
+
+        ~RecurringEvent() override = default;
+        RecurringEvent& operator=(const RecurringEvent& other) = default;
+        RecurringEvent(const RecurringEvent& other) = default;
     };
 
 }

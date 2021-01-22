@@ -27,7 +27,7 @@ namespace mtm {
         static bool isStudentNumberValid(int student);
         const DateWrap& getDate() const;
         const std::string& getName() const;
-        BaseEvent& operator=(const BaseEvent &event) = delete;
+        BaseEvent& operator=(const BaseEvent &event) = default;
         bool operator<(const BaseEvent &event);
         bool operator==(const BaseEvent &event) const;
     };

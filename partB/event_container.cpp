@@ -43,6 +43,7 @@ namespace mtm {
             events.add(SharedPointer<BaseEvent>(other.events[i]->clone()));
         }
     }
+
     // TODO: Check this
     EventContainer &EventContainer::operator=(const EventContainer &other) {
         events = Vector<SharedPointer<BaseEvent>>();

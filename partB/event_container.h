@@ -42,6 +42,7 @@ namespace mtm {
         };
         EventContainer() = default;
         virtual void add(const BaseEvent& event) = 0;
+        virtual ~EventContainer() = default;
         EventIterator begin();
         EventIterator end();
         ConstEventIterator begin() const;

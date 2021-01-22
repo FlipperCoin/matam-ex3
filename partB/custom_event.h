@@ -16,9 +16,11 @@ namespace mtm {
                 BaseEvent(date, event_name), can_register(can_register){
         };
 
+// TODO: default copy
         CustomEvent(const CustomEvent &event) : BaseEvent(event), can_register(event.can_register){
         }
-
+        ~CustomEvent() override = default;
+        CustomEvent& operator=(const CustomEvent& other) = default;
         CustomEvent* clone() const override{
             return (new CustomEvent(*this));
         };
@@ -36,6 +38,8 @@ namespace mtm {
             participants.add(student);
             participants.sort_int();
         }
+
+
     };
 }
 

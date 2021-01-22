@@ -12,6 +12,9 @@ namespace mtm {
         void add(const BaseEvent& event) override{
             throw NotSupported();
         }
+        ~OneTimeEvent() override = default;
+        OneTimeEvent& operator=(const OneTimeEvent& other) = default;
+        OneTimeEvent(const OneTimeEvent& other) = default;
     };
 
 }
