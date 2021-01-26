@@ -15,7 +15,6 @@ namespace mtm {
         CustomEvent(const DateWrap& date, const std::string& event_name, CanRegister can_register):
                 BaseEvent(date, event_name), can_register(can_register){
         };
-
         CustomEvent(const CustomEvent &event) = default;
         ~CustomEvent() override = default;
         CustomEvent& operator=(const CustomEvent& other) = default;

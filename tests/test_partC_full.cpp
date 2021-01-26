@@ -416,21 +416,11 @@ TEST_F(ScheduleTests, sanity) {
     s_filled->unregisterFromEvent(d5, "event6", 1);
 
     auto *s2 = new Schedule();
-    *s2 = *s_filled; // assignment
-    auto e100 = OneTimeEvent<OpenEvent>(d3,"event100");
+    *s2 = *s_filled;
+    s2->addEvents(OneTimeEvent<OpenEvent>(d3,"event100"));
     EXPECT_NO_THROW(s_filled->registerToEvent(d2, "event9", 4));
     EXPECT_NO_THROW(s2->registerToEvent(d2, "event9", 4));
     EXPECT_THROW(s2->registerToEvent(d2, "event9", 3), AlreadyRegistered);
-    EXPECT_NO_THROW(s2->addEvents(e100));
-    EXPECT_NO_THROW(s_filled->addEvents(e100));
-
-    auto s3 = *s_filled; // copy
-    auto e101 = OneTimeEvent<OpenEvent>(d3,"event101");
-    EXPECT_NO_THROW(s_filled->registerToEvent(d2, "event9", 9));
-    EXPECT_NO_THROW(s3.registerToEvent(d2, "event9", 9));
-    EXPECT_THROW(s3.registerToEvent(d2, "event9", 4), AlreadyRegistered);
-    EXPECT_NO_THROW(s3.addEvents(e101));
-    EXPECT_NO_THROW(s_filled->addEvents(e101));
 
     s_filled->unregisterFromEvent(d5,"event8", 26);
     s_filled->unregisterFromEvent(d2,"event2",3);
