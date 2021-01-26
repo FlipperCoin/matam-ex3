@@ -32,7 +32,7 @@ void polymorphismTest() {
 	ostringstream buf;
 	event_array[0] = new OpenEvent(DateWrap(19,1,2021), "Open");
 	event_array[1] = new ClosedEvent(DateWrap(20,1,2021), "Closed");
-	event_array[2] = new CustomEvent<Divisible2>(DateWrap(21,1,2021), "Custom");
+	event_array[2] = new CustomEvent<Divisible2>(DateWrap(21,1,2021), "Custom", Divisible2());
 	event_array[0]->registerParticipant(1);
 	try {
 		event_array[1]->registerParticipant(1);
